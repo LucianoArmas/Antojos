@@ -2,36 +2,43 @@ package antojos.ecommerce.products;
 
 import java.util.List;
 
-import antojos.ecommerce.shopping.Shopping;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import antojos.ecommerce.order.Order;
+import jakarta.persistence.*;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "product_type", discriminatorType = DiscriminatorType.STRING)
 public class Product {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "prodId",unique = true)
   private Long id;
 
+  @Column(nullable = false)
   private String name;
-  private String desc;
+
+  @Column(nullable = false)
+  private String description;
+
+  @Column(nullable = false)
   private Float price;
 
-  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-  private List<Shopping> shoppings;
+  @Column(nullable = false)
+  private int stock;
+
+  @OneToMany(mappedBy = "prod", cascade = CascadeType.ALL)
+  private List<Order> orders;
 
   public Product(){}
 
-  public Product(Long id, String name, String desc, Float price, List<Shopping> shoppings) {
+  public Product(Long id, String name, String desc, Float price, int stock, List<Order> orders) {
     this.id = id;
     this.name = name;
-    this.desc = desc;
+    this.description = desc;
     this.price = price;
-    this.shoppings = shoppings;
+    this.stock = stock;
+    this.orders = orders;
   }
 
   @Override
@@ -39,9 +46,15 @@ public class Product {
     return "Products["+
     "id=" + id + 
     ", name=" + name + 
-    ", desc=" + desc + 
+    ", description=" + description +
     ", price=" + price + 
     "]";
+  }
+
+  @Transient
+  public String getType() {
+    DiscriminatorValue discriminatorValue = this.getClass().getAnnotation(DiscriminatorValue.class);
+    return (discriminatorValue != null) ? discriminatorValue.value() : null;
   }
 
 
@@ -61,12 +74,12 @@ public class Product {
     this.name = name;
   }
 
-  public String getDesc() {
-    return desc;
+  public String getDescription() {
+    return description;
   }
 
-  public void setDesc(String desc) {
-    this.desc = desc;
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public Float getPrice() {
@@ -77,12 +90,21 @@ public class Product {
     this.price = price;
   }
 
-  public List<Shopping> getShoppings() {
-    return shoppings;
+
+  public int getStock() {
+    return stock;
   }
 
-  public void setShoppings(List<Shopping> shoppings) {
-    this.shoppings = shoppings;
+  public void setStock(int stock) {
+    this.stock = stock;
+  }
+
+  public List<Order> getOrders() {
+    return orders;
+  }
+
+  public void setOrders(List<Order> orders) {
+    this.orders = orders;
   }
 
   

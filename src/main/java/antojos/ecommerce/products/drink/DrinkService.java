@@ -32,7 +32,7 @@ public class DrinkService {
       Drink updatedDrink = existingDrink.get();
       updatedDrink.setId(id);
       updatedDrink.setName(drink.getName());
-      updatedDrink.setDesc(drink.getDesc());
+      updatedDrink.setDescription(drink.getDescription());
       updatedDrink.setPrice(drink.getPrice());
       updatedDrink.setMililts(drink.getMililts());
 

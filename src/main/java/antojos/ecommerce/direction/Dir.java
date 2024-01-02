@@ -1,18 +1,66 @@
 package antojos.ecommerce.direction;
 
 import antojos.ecommerce.user.User;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.*;
 
-@Entity
+import java.io.Serializable;
+
+@Entity(name = "Direction")
 public class Dir {
+
+  @Embeddable
+  public static class  DirId implements Serializable{
+    private String street;
+    private int number;
+    private String postalCode;
+    @Column(name = "user_dni")
+    private String userDni;
+
+
+    public DirId() {
+    }
+
+    public DirId(String street, int number, String postalCode, String userDni) {
+      this.street = street;
+      this.number = number;
+      this.postalCode = postalCode;
+      this.userDni = userDni;
+    }
+
+
+
+    public String getStreet() {
+      return street;
+    }
+    public void setStreet(String street) {
+      this.street = street;
+    }
+    public int getNumber() {
+      return number;
+    }
+    public void setNumber(int number) {
+      this.number = number;
+    }
+    public String getPostalCode() {
+      return postalCode;
+    }
+    public void setPostalCode(String postalCode) {
+      this.postalCode = postalCode;
+    }
+    public String getUserDni() {
+      return userDni;
+    }
+    public void setUserDni(String userDni) {
+      this.userDni = userDni;
+    }
+  }
+
   @EmbeddedId
   private DirId id;
 
   @ManyToOne
   @MapsId("userDni")
+  @JoinColumn(name = "user_dni")
   private User user;
 
 

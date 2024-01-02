@@ -1,19 +1,17 @@
-package antojos.ecommerce.shopping;
+package antojos.ecommerce.order;
 
 import antojos.ecommerce.products.Product;
 import antojos.ecommerce.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+
 import java.util.Date;
 
 @Entity
-public class Shopping {
+@Table(name = "orderEntity")
+public class Order {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(unique = true)
   private Long cod;
   
   @ManyToOne
@@ -24,14 +22,16 @@ public class Shopping {
   @JoinColumn(name = "productId")
   private Product prod;
 
+  @Column(nullable = false)
   private Date date;
+  @Column(nullable = false)
   private double totPrice;
 
 
   
-  public Shopping(){}
+  public Order(){}
 
-  public Shopping(Long cod, User user, Product prod, Date date, double totPrice) {
+  public Order(Long cod, User user, Product prod, Date date, double totPrice) {
     this.cod = cod;
     this.user = user;
     this.prod = prod;
@@ -72,7 +72,7 @@ public class Shopping {
 
   @Override
   public String toString() {
-    return "Shopping [cod=" + cod + ", user=" + user + ", prod=" + prod + ", date=" + date + ", totPrice=" + totPrice
+    return "Order [cod=" + cod + ", user=" + user + ", prod=" + prod + ", date=" + date + ", totPrice=" + totPrice
         + "]";
   }
 

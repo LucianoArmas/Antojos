@@ -1,7 +1,12 @@
 package antojos.ecommerce.products;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import antojos.ecommerce.products.drink.Drink;
+import antojos.ecommerce.products.food.Food;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,8 +17,17 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  public List<Product> getAllProducts(){
-    return productRepository.findAll();
+  public Map<String, List<Product>>  getAllProducts(){
+    List<Product> productList = productRepository.findAll();
+
+    Map<String, List<Product>> prodByType = new HashMap<>();
+
+    for (Product product : productList){
+      String type = product.getType();
+      prodByType.computeIfAbsent(type, k -> new ArrayList<>()).add(product);
+    }
+
+    return prodByType;
   }
 
   public Product getProductById(Long id){

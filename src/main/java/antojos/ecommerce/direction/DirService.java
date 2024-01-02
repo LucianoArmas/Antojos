@@ -18,7 +18,7 @@ public class DirService {
     return dirRepository.findAll();
   }
 
-  public Dir getDirById(DirId id){
+  public Dir getDirById(Dir.DirId id){
     return dirRepository.findById(id).orElse(null);
   }
 
@@ -28,7 +28,7 @@ public class DirService {
   }
 
   public void updateDir(Dir dir){
-    DirId id = dir.getId();
+    Dir.DirId id = dir.getId();
     Optional<Dir> existingDir = dirRepository.findById(id);
     if(existingDir.isPresent()){
       Dir updatedDir = existingDir.get();
@@ -41,7 +41,7 @@ public class DirService {
     }
   }
 
-  public void deleteDir(DirId id){
+  public void deleteDir(Dir.DirId id){
     if(dirRepository.existsById(id)){
       dirRepository.deleteById(id);
     }else{

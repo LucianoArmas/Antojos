@@ -32,7 +32,7 @@ public class FoodService {
       Food updatedFood = existingFood.get();
       updatedFood.setId(id);
       updatedFood.setName(food.getName());
-      updatedFood.setDesc(food.getDesc());
+      updatedFood.setDescription(food.getDescription());
       updatedFood.setPrice(food.getPrice());
       updatedFood.setAmountPeopleEat(food.getAmountPeopleEat());
 

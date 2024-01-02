@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head">
+<body>
+    <header th:replace="template :: header"></header>
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header d-flex justify-content-end">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body"></div>
+    </div>
+
+    <h1>PRODUCTS</h1>
+
+    <h2>FOODS</h2>
+    <div th:each="food : ${foods}" class="card" style="width: 18rem; height: 36rem">
+        <img th:src="@{'/imgs/'+${food.name}+'.png'}" class="card-img-top" th:alt="${food.name}" style="height: fit-content; max-width: 18rem; max-height: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${food.name}" ></h5>
+            <p class="card-text" th:text="${food.description}"></p>
+            <p class="text-primary" th:text="'$'+${food.price}"></p>
+            <a href="#" class="btn btn-secondary">More info</a>
+            <a href="#" class="btn btn-primary">Add to cart</a>
+        </div>
+    </div>
+
+    <h2>DRINKS</h2>
+    <div th:each="drink : ${drinks}" class="card" style="width: 18rem; height: 36rem">
+        <img th:src="@{'/imgs/'+${drink.name}+'.png'}" class="card-img-top" th:alt="${drink.name}" style="height: fit-content; max-width: 9rem; max-height: 18rem; align-self: center;">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${drink.name}" ></h5>
+            <p class="card-text" th:text="${drink.description}"></p>
+            <p class="text-primary" th:text="'$'+${drink.price}"></p>
+            <a href="#" class="btn btn-secondary">More info</a>
+            <a href="#" class="btn btn-primary">Add to cart</a>
+        </div>
+    </div>
+
+
+    <footer th:replace="template :: footer"></footer>
+</body>
+</html>

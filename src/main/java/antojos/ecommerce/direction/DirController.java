@@ -41,20 +41,20 @@ public class DirController {
 
 
   @GetMapping("/edit/{id}")
-  public String editDirForm(@PathVariable DirId id, Model model){
+  public String editDirForm(@PathVariable Dir.DirId id, Model model){
     Dir dir = dirService.getDirById(id);
     model.addAttribute("dir", dir);
     return "dirs/edit";
   }
   @PostMapping("/edit/{id}")
-  public String editDir(@PathVariable DirId id, @ModelAttribute Dir dir){
+  public String editDir(@PathVariable Dir.DirId id, @ModelAttribute Dir dir){
     dirService.updateDir(dir);
     return "redirect:/users/list";
   }
 
 
   @GetMapping("/delete/{id}")
-  public String deleteDir(@PathVariable DirId id){
+  public String deleteDir(@PathVariable Dir.DirId id){
     dirService.deleteDir(id);
     return "redirect:/users/list";
   }

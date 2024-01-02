@@ -2,33 +2,36 @@ package antojos.ecommerce.user;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import antojos.ecommerce.order.Order;
+import jakarta.persistence.*;
 import antojos.ecommerce.direction.Dir;
-import antojos.ecommerce.shopping.Shopping;
 
 @Entity
 public class User {
 
   @Id
+  @Column(unique = true, nullable = false)
   private String dni;
+  @Column(nullable = false)
   private String name;
+  @Column(nullable = false)
   private String lastName;
+  @Column(nullable = false)
   private String userPass;
+  @Column(nullable = false)
   private String email;
+  @Column(nullable = false)
   private String accessLvl;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private List<Dir> directions;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  private List<Shopping> shoppings; 
+  private List<Order> orders;
 
   public User(){}
 
-  public User(String dni, String name, String lastName, String userPass, String email, String accessLvl, List<Dir> directions, List<Shopping> shoppings){
+  public User(String dni, String name, String lastName, String userPass, String email, String accessLvl, List<Dir> directions, List<Order> orders){
     this.dni = dni;
     this.name = name;
     this.lastName = lastName;
@@ -36,7 +39,7 @@ public class User {
     this.email = email;
     this.accessLvl = accessLvl;
     this.directions = directions;
-    this.shoppings = shoppings;
+    this.orders = orders;
   }
 
   @Override
@@ -84,12 +87,12 @@ public class User {
     return accessLvl;
   }
 
-  public List<Shopping> getShoppings() {
-    return shoppings;
+  public List<Order> getShoppings() {
+    return orders;
   }
 
-  public void setShoppings(List<Shopping> shoppings) {
-    this.shoppings = shoppings;
+  public void setShoppings(List<Order> orders) {
+    this.orders = orders;
   }
   
 

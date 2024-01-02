@@ -1,4 +1,4 @@
-package antojos.ecommerce.shopping;
+package antojos.ecommerce.order;
 
 import org.springframework.stereotype.Service;
 
@@ -9,54 +9,54 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ShoppingService {
-  private final ShoppingRepository shoppingRepository;
+public class OrderService {
+  private final OrderRepository orderRepository;
 
-  public ShoppingService(ShoppingRepository shoppingRepository) {
-    this.shoppingRepository = shoppingRepository;
+  public OrderService(OrderRepository orderRepository) {
+    this.orderRepository = orderRepository;
   }
 
-  public List<Shopping> getAllShoppings(){
-    return shoppingRepository.findAll();
+  public List<Order> getAllShoppings(){
+    return orderRepository.findAll();
   }
   
 
-  public List<Shopping> getByDate(Date dateFrom, Date dateTo){
-    return shoppingRepository.findByDateBetween(dateFrom, dateTo);
+  public List<Order> getByDate(Date dateFrom, Date dateTo){
+    return orderRepository.findByDateBetween(dateFrom, dateTo);
   }
-  public List<Shopping> getByUser(User user){
-    return shoppingRepository.findByUser(user);
+  public List<Order> getByUser(User user){
+    return orderRepository.findByUser(user);
   }
-  public List<Shopping> getByUserAndDate(User user, Date dateFrom, Date dateTo){
-    return shoppingRepository.findByUserAndDateBetween(user, dateTo, dateTo);
+  public List<Order> getByUserAndDate(User user, Date dateFrom, Date dateTo){
+    return orderRepository.findByUserAndDateBetween(user, dateTo, dateTo);
   }
-  public Shopping getShopByCod(Long cod){
-    return shoppingRepository.findById(cod).orElse(null);
-  }
-
-
-  public void addShop(Shopping shopping){
-    shoppingRepository.save(shopping);
+  public Order getShopByCod(Long cod){
+    return orderRepository.findById(cod).orElse(null);
   }
 
 
-  public void updateShopping(Shopping shopping){
-    Long cod = shopping.getCod();
-    Optional<Shopping> existingShop = shoppingRepository.findById(cod);
+  public void addShop(Order order){
+    orderRepository.save(order);
+  }
+
+
+  public void updateShopping(Order order){
+    Long cod = order.getCod();
+    Optional<Order> existingShop = orderRepository.findById(cod);
     if(existingShop.isPresent()){
-      Shopping updatedShop = existingShop.get();
+      Order updatedShop = existingShop.get();
       updatedShop.setCod(cod);
-      updatedShop.setDate(shopping.getDate());
-      updatedShop.setTotPrice(shopping.getTotPrice());
-      updatedShop.setUser(shopping.getUser());
-      updatedShop.setProd(shopping.getProd());
+      updatedShop.setDate(order.getDate());
+      updatedShop.setTotPrice(order.getTotPrice());
+      updatedShop.setUser(order.getUser());
+      updatedShop.setProd(order.getProd());
 
-      shoppingRepository.save(updatedShop);
+      orderRepository.save(updatedShop);
     }
   }
 
 
   public void deleteShopping(Long cod){
-    shoppingRepository.deleteById(cod);
+    orderRepository.deleteById(cod);
   }
 }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head">
+<body>
+    <header th:replace="template :: header"></header>
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header d-flex justify-content-end">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body"></div>
+    </div>
+    <h1>USUARIOS</h1>
+    <ul>
+        <li th:each="user : ${users}">
+            <span th:text="${user.name}"></span>
+        </li>
+    </ul>
+
+    <footer th:replace="template :: footer"></footer>
+</body>
+</html>
