@@ -22,7 +22,7 @@ public class OrderController {
 
   @GetMapping("/list")
   public String listShops(Model model){
-    List<Order> shops = orderService.getAllShoppings();
+    List<Order> shops = orderService.getAllOrders();
     model.addAttribute("shops", shops);
     return "shoppings/list";
   }

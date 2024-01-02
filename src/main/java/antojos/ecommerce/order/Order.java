@@ -1,10 +1,11 @@
 package antojos.ecommerce.order;
 
-import antojos.ecommerce.products.Product;
+import antojos.ecommerce.orderLine.OrderLine;
 import antojos.ecommerce.user.User;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "orderEntity")
@@ -18,25 +19,26 @@ public class Order {
   @JoinColumn(name = "userDni")
   private User user;
 
-  @ManyToOne
-  @JoinColumn(name = "productId")
-  private Product prod;
-
   @Column(nullable = false)
   private Date date;
   @Column(nullable = false)
   private double totPrice;
+  @Column(nullable = false)
+  private String state;
+  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+  private List<OrderLine> orderLineList;
 
 
   
   public Order(){}
 
-  public Order(Long cod, User user, Product prod, Date date, double totPrice) {
+  public Order(Long cod, User user, Date date, double totPrice, String state, List<OrderLine> orderLineList) {
     this.cod = cod;
     this.user = user;
-    this.prod = prod;
     this.date = date;
     this.totPrice = totPrice;
+    this.state = state;
+    this.orderLineList = orderLineList;
   }
 
   public Long getCod() {
@@ -51,12 +53,6 @@ public class Order {
   public void setUser(User user) {
     this.user = user;
   }
-  public Product getProd() {
-    return prod;
-  }
-  public void setProd(Product prod) {
-    this.prod = prod;
-  }
   public Date getDate() {
     return date;
   }
@@ -69,11 +65,23 @@ public class Order {
   public void setTotPrice(double totPrice) {
     this.totPrice = totPrice;
   }
+  public String getState() {
+    return state;
+  }
+  public void setState(String state) {
+    this.state = state;
+  }
+  public List<OrderLine> getOrderLineList() {
+    return orderLineList;
+  }
+  public void setOrderLineList(List<OrderLine> orderLineList) {
+    this.orderLineList = orderLineList;
+  }
 
   @Override
   public String toString() {
-    return "Order [cod=" + cod + ", user=" + user + ", prod=" + prod + ", date=" + date + ", totPrice=" + totPrice
-        + "]";
+    return "Order [cod=" + cod + ", user=" + user + ", date=" + date + ", totPrice=" + totPrice
+        + ", state=" + state +"]";
   }
 
   

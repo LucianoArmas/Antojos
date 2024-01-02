@@ -2,8 +2,8 @@ package antojos.ecommerce.products.drink;
 
 import java.util.List;
 
+import antojos.ecommerce.orderLine.OrderLine;
 import antojos.ecommerce.products.Product;
-import antojos.ecommerce.order.Order;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -15,8 +15,8 @@ public class Drink extends Product{
   public Drink() {
   }
 
-  public Drink(Long id, String name, String desc, Float price, int stock, List<Order> orders, Float mililts) {
-    super(id, name, desc, price, stock, orders);
+  public Drink(Long id, String name, String desc, Float price, int stock, List<OrderLine> orderLineList, Float mililts) {
+    super(id, name, desc, price, stock, orderLineList);
     this.mililts = mililts;
   }
 

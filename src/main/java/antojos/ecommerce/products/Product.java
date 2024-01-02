@@ -3,6 +3,7 @@ package antojos.ecommerce.products;
 import java.util.List;
 
 import antojos.ecommerce.order.Order;
+import antojos.ecommerce.orderLine.OrderLine;
 import jakarta.persistence.*;
 
 @Entity
@@ -27,18 +28,19 @@ public class Product {
   @Column(nullable = false)
   private int stock;
 
-  @OneToMany(mappedBy = "prod", cascade = CascadeType.ALL)
-  private List<Order> orders;
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+  List<OrderLine> orderLineList;
+
 
   public Product(){}
 
-  public Product(Long id, String name, String desc, Float price, int stock, List<Order> orders) {
+  public Product(Long id, String name, String desc, Float price, int stock, List<OrderLine> orderLineList) {
     this.id = id;
     this.name = name;
     this.description = desc;
     this.price = price;
     this.stock = stock;
-    this.orders = orders;
+    this.orderLineList = orderLineList;
   }
 
   @Override
@@ -90,7 +92,6 @@ public class Product {
     this.price = price;
   }
 
-
   public int getStock() {
     return stock;
   }
@@ -99,14 +100,12 @@ public class Product {
     this.stock = stock;
   }
 
-  public List<Order> getOrders() {
-    return orders;
+
+  public List<OrderLine> getOrderLineList() {
+    return orderLineList;
   }
 
-  public void setOrders(List<Order> orders) {
-    this.orders = orders;
+  public void setOrderLineList(List<OrderLine> orderLineList) {
+    this.orderLineList = orderLineList;
   }
-
-  
-
 }

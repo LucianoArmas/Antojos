@@ -16,7 +16,7 @@ public class OrderService {
     this.orderRepository = orderRepository;
   }
 
-  public List<Order> getAllShoppings(){
+  public List<Order> getAllOrders(){
     return orderRepository.findAll();
   }
   
@@ -49,7 +49,7 @@ public class OrderService {
       updatedShop.setDate(order.getDate());
       updatedShop.setTotPrice(order.getTotPrice());
       updatedShop.setUser(order.getUser());
-      updatedShop.setProd(order.getProd());
+      //MODIFICAR
 
       orderRepository.save(updatedShop);
     }
