@@ -2,7 +2,6 @@ package antojos.ecommerce.products;
 
 import java.util.List;
 
-import antojos.ecommerce.order.Order;
 import antojos.ecommerce.orderLine.OrderLine;
 import jakarta.persistence.*;
 

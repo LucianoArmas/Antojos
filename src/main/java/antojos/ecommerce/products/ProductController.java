@@ -20,17 +20,23 @@ public class ProductController {
     this.productService = productService;
   }
 
+
   @GetMapping("")
-  public String listProds(Model model){
+  public String index(Model model){
     Map<String, List<Product>> productsByType = productService.getAllProducts();
     model.addAttribute("foods", productsByType.getOrDefault("food", new ArrayList<>()));
     model.addAttribute("drinks", productsByType.getOrDefault("drink", new ArrayList<>()));
-//    List<Product> products = productService.getAllProducts();
-//    model.addAttribute("products", products);
-//    List<Food> foods = productService.getFoods();
-//    model.addAttribute("foods", foods);
-    return "/products/prodlist";
+    return "/products/index";
   }
+
+  @GetMapping("/details/{id}")
+  public String getDetailsProd(@PathVariable Long id, Model model){
+    Product product = productService.getProductById(id);
+    model.addAttribute("productSelected", product);
+    return "products/details";
+  }
+
+
   @GetMapping("/delete/{id}")
   public String deleteProd(@PathVariable Long id){
     productService.deleteProduct(id);

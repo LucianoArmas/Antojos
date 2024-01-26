@@ -1,7 +1,9 @@
 package antojos.ecommerce.user;
 
 import java.util.List;
+import java.util.Objects;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +18,14 @@ public class UserController {
   }
 
   @GetMapping("/list")
-  public String listUsers(Model model){
-    List<User> users = userService.getAllUsers();
-    model.addAttribute("users", users);
-    return "/users/userlist";
+  public String listUsers(Model model, HttpSession session){
+    User userInSession = (User) session.getAttribute("user");
+    if (Objects.equals(userInSession.getAccessLvl(), "admin")){
+      List<User> users = userService.getAllUsers();
+      model.addAttribute("users", users);
+      return "/users/userlist";
+    }
+    return "redirect:/";
   }
 
 

@@ -21,4 +21,6 @@ public interface OrderRepository extends JpaRepository<Order,Long>{
     @Param("fromDate") Date fromDate,
     @Param("toDate") Date toDate
   );
+
+  Order findByUserAndState(User user, String state);
 }

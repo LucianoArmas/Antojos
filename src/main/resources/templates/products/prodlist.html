@@ -1,42 +1,82 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="template :: head">
+<head th:replace="~{template.html :: head}"></head>
 <body>
-    <header th:replace="template :: header"></header>
-    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-        <div class="offcanvas-header d-flex justify-content-end">
+    <header th:replace="~{template.html :: header}"></header>
+    
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header d-flex justify-content-end top-0">
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body"></div>
+        <div class="offcanvas-body">
+            <p>xd</p>
+        </div>
     </div>
 
     <h1>PRODUCTS</h1>
+    <div class="prodContainer" style="display: grid; justify-content: center;">
+        <div>
+            <h2 style="justify-self: center; padding-bottom: 10px; padding-top: 10px">FOODS</h2>
+            <div class="col-2 dropdown d-flex">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filter
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Alphabetic</a></li>
+                    <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
+                    <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="foodContainer" style="display: inline-flex; max-width: 80%; flex-wrap: wrap; padding-bottom: 20px; justify-self: center;">
+            <div th:each="food : ${foods}" class="card" style="width: 18rem; height: 30rem; display: grid">
+                <img th:src="@{'/imgs/'+${food.name}+'.png'}" class="card-img-top" th:alt="${food.name}" style="height: fit-content; max-width: 9rem; max-height: 18rem; align-self: center; justify-self: center;">
+                <div class="card-body" style="align-self: end; justify-self: center; padding-bottom: 30px;">
+                    <h5 class="card-title" th:text="${food.name}" ></h5>
+                    <p class="card-text" th:text="${food.description}"></p>
+                    <p class="text-primary" th:text="'$'+${food.price}"></p>
+                    <a href="#" class="btn btn-secondary">More info</a>
+                    <button class="CartBtn">
+                        <span class="IconContainer">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512" fill="rgb(17, 17, 17)" class="cart"><path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path></svg>
+                        </span>
+                        <p class="text">Add to Cart</p>
+                    </button>
+<!--                    <a href="#" class="btn btn-primary">Add to cart</a>-->
+                </div>
+            </div>
+        </div>
 
-    <h2>FOODS</h2>
-    <div th:each="food : ${foods}" class="card" style="width: 18rem; height: 36rem">
-        <img th:src="@{'/imgs/'+${food.name}+'.png'}" class="card-img-top" th:alt="${food.name}" style="height: fit-content; max-width: 18rem; max-height: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title" th:text="${food.name}" ></h5>
-            <p class="card-text" th:text="${food.description}"></p>
-            <p class="text-primary" th:text="'$'+${food.price}"></p>
-            <a href="#" class="btn btn-secondary">More info</a>
-            <a href="#" class="btn btn-primary">Add to cart</a>
+
+        <div>
+            <h2 style="justify-self: center; padding-bottom: 10px; padding-top: 10px">DRINKS</h2>
+            <div class="col-2 dropdown d-flex">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filter
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Alphabetic</a></li>
+                    <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
+                    <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="drinkContainer" style="display: inline-flex; max-width: 100%; flex-wrap: wrap; padding-bottom: 20px; justify-self: center;">
+            <div th:each="drink : ${drinks}" class="card" style="width: 18rem; height: 30rem; display: grid">
+                <img th:src="@{'/imgs/'+${drink.name}+'.png'}" class="card-img-top" th:alt="${drink.name}" style="height: fit-content; max-width: 9rem; max-height: 18rem; align-self: center; justify-self: center;">
+                <div class="card-body" style="align-self: end; justify-self: center; padding-bottom: 30px;">
+                    <h5 class="card-title" th:text="${drink.name}" ></h5>
+                    <p class="card-text" th:text="${drink.description}"></p>
+                    <p class="text-primary" th:text="'$'+${drink.price}"></p>
+                    <a href="#" class="btn btn-secondary">More info</a>
+                    <a href="#" class="btn btn-primary">Add to cart</a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <h2>DRINKS</h2>
-    <div th:each="drink : ${drinks}" class="card" style="width: 18rem; height: 36rem">
-        <img th:src="@{'/imgs/'+${drink.name}+'.png'}" class="card-img-top" th:alt="${drink.name}" style="height: fit-content; max-width: 9rem; max-height: 18rem; align-self: center;">
-        <div class="card-body">
-            <h5 class="card-title" th:text="${drink.name}" ></h5>
-            <p class="card-text" th:text="${drink.description}"></p>
-            <p class="text-primary" th:text="'$'+${drink.price}"></p>
-            <a href="#" class="btn btn-secondary">More info</a>
-            <a href="#" class="btn btn-primary">Add to cart</a>
-        </div>
-    </div>
 
 
-    <footer th:replace="template :: footer"></footer>
+    <footer th:replace="~{template.html :: footer}"></footer>
 </body>
 </html>

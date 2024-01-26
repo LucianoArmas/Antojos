@@ -21,6 +21,7 @@ public class UserService {
     return userRepository.findById(dni).orElse(null);
   }
 
+  public User findByDniAndUserPass(String dni, String pass){ return  userRepository.findByDniAndUserPass(dni, pass);}
   public void addUser(User user){
     userRepository.save(user);
   }

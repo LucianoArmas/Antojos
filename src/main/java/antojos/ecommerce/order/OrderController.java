@@ -2,40 +2,66 @@ package antojos.ecommerce.order;
 
 import java.util.List;
 
+import antojos.ecommerce.orderLine.OrderLine;
+import antojos.ecommerce.products.Product;
+import antojos.ecommerce.products.ProductService;
+import antojos.ecommerce.user.User;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
-@RequestMapping("/shoppings")
+@RequestMapping("/orders")
 public class OrderController {
   private OrderService orderService;
 
-  public OrderController(OrderService orderService) {
+  private ProductService productService;
+
+  public OrderController(OrderService orderService, ProductService productService) {
     this.orderService = orderService;
+    this.productService = productService;
   }
+
+  @GetMapping("/cart")
+  public String viewCart(Model model, HttpSession session){
+    Order order = (Order) session.getAttribute("order");
+//    List<OrderLine> orderLineList = orderService.getOrderLinesFromSession(session);
+    List<OrderLine> orderLineList = order.getOrderLineList();
+
+    model.addAttribute("orderLines",orderLineList );
+    return "/order/orderLines";
+  }
+
+  @PostMapping("/addToCart")
+  public String addToCart(@RequestParam Long id, HttpSession session){
+    Product product = productService.getProductById(id);
+    Order order = (Order) session.getAttribute("order");
+    orderService.addProductToOrder(product, order, session);
+    return "redirect:/";
+  }
+
+
+
 
   @GetMapping("/list")
   public String listShops(Model model){
     List<Order> shops = orderService.getAllOrders();
-    model.addAttribute("shops", shops);
+    model.addAttribute("orders", shops);
     return "shoppings/list";
   }
 
 
+
   @GetMapping("/add")
   public String addShopForm(Model model){
-    model.addAttribute("shop", new Order());
+    model.addAttribute("order", new Order());
     return "shoppings/add";
   }
   @PostMapping("/add")
   public String addShop(@ModelAttribute Order shop){
-    orderService.addShop(shop);
+    orderService.addOrder(shop);
     return "redirect:/shoppings/list";
   }
 
@@ -43,7 +69,7 @@ public class OrderController {
   @GetMapping("/edit/{cod}")
   public String editShopForm(@PathVariable Long cod, Model model){
     Order shop = orderService.getShopByCod(cod);
-    model.addAttribute("shop", shop);
+    model.addAttribute("order", shop);
     return "shoppings/edit";
   }
   @PostMapping("/edit/{cod}")

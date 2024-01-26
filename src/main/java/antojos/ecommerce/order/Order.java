@@ -19,11 +19,11 @@ public class Order {
   @JoinColumn(name = "userDni")
   private User user;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private Date date;
-  @Column(nullable = false)
+  @Column(nullable = true)
   private double totPrice;
-  @Column(nullable = false)
+  @Column(nullable = true)
   private String state;
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
   private List<OrderLine> orderLineList;
@@ -39,6 +39,12 @@ public class Order {
     this.totPrice = totPrice;
     this.state = state;
     this.orderLineList = orderLineList;
+  }
+  public Order(User user, Date date, double totPrice, String state) {
+    this.user = user;
+    this.date = date;
+    this.totPrice = totPrice;
+    this.state = state;
   }
 
   public Long getCod() {
@@ -82,6 +88,16 @@ public class Order {
   public String toString() {
     return "Order [cod=" + cod + ", user=" + user + ", date=" + date + ", totPrice=" + totPrice
         + ", state=" + state +"]";
+  }
+
+
+  public double calcuTotal(){
+    double total = 0;
+    for (OrderLine ol: orderLineList) {
+      total = total + ol.getSubTotPrice();
+    }
+    setTotPrice(total);
+    return total;
   }
 
   

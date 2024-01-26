@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Antojos</title>
+</head>
+<body>
+<ul th:each="orderline : ${session.orderLineList}">
+    <li th:text="${orderline}"></li>
+    <li th:text="${orderline.product}"></li>
+    <li th:text="${orderline.product.name}"></li>
+    <li th:text="${orderline.getNro()}"></li>
+</ul>
+
+<p th:text="${session.orderLineList}"></p>
+</body>
+</html>

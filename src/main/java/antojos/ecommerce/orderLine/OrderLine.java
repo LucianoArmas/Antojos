@@ -12,9 +12,9 @@ public class OrderLine {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
   private Long number;
-  @Column(nullable = false)
+  @Column(nullable = true)
   private int quantityProds;
-  @Column(nullable = false)
+  @Column(nullable = true)
   private Float subTotPrice;
 
   @ManyToOne
@@ -29,6 +29,10 @@ public class OrderLine {
     this.number = nro;
     this.quantityProds = quantityProds;
     this.subTotPrice = subTotPrice;
+    this.product = product;
+    this.order = order;
+  }
+  public OrderLine(Product product, Order order) {
     this.product = product;
     this.order = order;
   }

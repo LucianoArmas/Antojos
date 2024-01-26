@@ -1,0 +1,104 @@
+body{
+    font-family: "Roboto", sans-serif;
+    background: #2c374b;
+    color: whitesmoke;
+}
+
+.CartBtn {
+    border: 2px solid rgb(255, 208, 0);
+    font-size: 16px;
+    transition: transform 0.1s ease-in, all 0.08s ease-in;
+    box-shadow: 0 5px 0 rgb(255, 183, 0);
+}
+    /*background-color: rgb(255, 208, 0);*/
+
+/*.IconContainer {*/
+/*    position: absolute;*/
+/*    left: -50px;*/
+/*    width: 30px;*/
+/*    height: 30px;*/
+/*    background-color: transparent;*/
+/*    border-radius: 50%;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    overflow: hidden;*/
+/*    z-index: 2;*/
+/*    transition-duration: .5s;*/
+/*}*/
+
+.icon {
+    border-radius: 1px;
+}
+
+/*.text {*/
+/*    height: 100%;*/
+/*    width: fit-content;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    color: rgb(17, 17, 17);*/
+/*    z-index: 1;*/
+/*    transition-duration: .5s;*/
+/*    font-size: 1.04em;*/
+/*    font-weight: 600;*/
+/*}*/
+
+.CartBtn:hover  {
+    border-color: rgb(255, 183, 0);
+    background: rgb(255, 183, 0);
+    box-shadow: 0 5px 0 rgb(255, 174, 0);
+}
+
+.CartBtn:active{
+    transform: translateY(5px);
+    background: rgb(255, 174, 0);
+    box-shadow: 0 0 0 rgb(255, 174, 0);
+}
+
+/*.CartBtn:hover .IconContainer {*/
+/*    transform: translateX(58px);*/
+/*    border-radius: 40px;*/
+/*    transition-duration: .5s;*/
+/*}*/
+
+/*.CartBtn:hover .text {*/
+/*    transform: translate(10px,0px);*/
+/*    transition-duration: .5s;*/
+/*}*/
+
+/*.CartBtn:active {*/
+/*    transform: scale(0.95);*/
+/*    transition-duration: .5s;*/
+/*}*/
+
+
+#subTitleFood, #subTitleDrink{
+    display: flex;
+    justify-content: space-between;
+    justify-self: center;
+    width: 80%;
+    align-items: center;
+}
+
+.sideMenu{
+    height: 100%;
+}
+.offcanvas-body{
+    height: 100%;
+    display: grid;
+    align-content: space-evenly;
+    justify-content: center;
+}
+
+.prodContainer h1  {
+    margin-left:30px;
+    margin-top:20px;
+}
+
+.dropDowns{
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+

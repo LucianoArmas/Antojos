@@ -53,7 +53,54 @@ public class User {
     "]";
   }
 
-  
+
+  public String getDni() {
+    return dni;
+  }
+
+  public void setDni(String dni) {
+    this.dni = dni;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public String getUserPass() {
+    return userPass;
+  }
+
+  public void setUserPass(String userPass) {
+    this.userPass = userPass;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getAccessLvl() {
+    return accessLvl;
+  }
+
+  public void setAccessLvl(String accessLvl) {
+    this.accessLvl = accessLvl;
+  }
 
   public List<Dir> getDirections() {
     return directions;
@@ -63,37 +110,11 @@ public class User {
     this.directions = directions;
   }
 
-  public String getDni() {
-    return dni;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
-
-  public String getUserPass() {
-    return userPass;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getAccessLvl() {
-    return accessLvl;
-  }
-
-  public List<Order> getShoppings() {
+  public List<Order> getOrders() {
     return orders;
   }
 
-  public void setShoppings(List<Order> orders) {
+  public void setOrders(List<Order> orders) {
     this.orders = orders;
   }
-  
-
 }
