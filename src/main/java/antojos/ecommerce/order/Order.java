@@ -22,7 +22,7 @@ public class Order {
   @Column(nullable = true)
   private Date date;
   @Column(nullable = true)
-  private double totPrice;
+  private float totPrice;
   @Column(nullable = true)
   private String state;
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
@@ -32,7 +32,7 @@ public class Order {
   
   public Order(){}
 
-  public Order(Long cod, User user, Date date, double totPrice, String state, List<OrderLine> orderLineList) {
+  public Order(Long cod, User user, Date date, float totPrice, String state, List<OrderLine> orderLineList) {
     this.cod = cod;
     this.user = user;
     this.date = date;
@@ -40,7 +40,7 @@ public class Order {
     this.state = state;
     this.orderLineList = orderLineList;
   }
-  public Order(User user, Date date, double totPrice, String state) {
+  public Order(User user, Date date, Float totPrice, String state) {
     this.user = user;
     this.date = date;
     this.totPrice = totPrice;
@@ -65,10 +65,10 @@ public class Order {
   public void setDate(Date date) {
     this.date = date;
   }
-  public double getTotPrice() {
+  public float getTotPrice() {
     return totPrice;
   }
-  public void setTotPrice(double totPrice) {
+  public void setTotPrice(float totPrice) {
     this.totPrice = totPrice;
   }
   public String getState() {
@@ -91,12 +91,17 @@ public class Order {
   }
 
 
-  public double calcuTotal(){
-    double total = 0;
-    for (OrderLine ol: orderLineList) {
-      total = total + ol.getSubTotPrice();
+  public float calcuTotal(){
+    float total = 0;
+    List<OrderLine> orderLines = orderLineList;
+    for (OrderLine orderLine : orderLines) {
+      total = total + orderLine.getSubTotPrice();
     }
     setTotPrice(total);
+//    for (OrderLine ol: orderLineList) {
+//      total = total + ol.getSubTotPrice();
+//    }
+//    setTotPrice(total);
     return total;
   }
 

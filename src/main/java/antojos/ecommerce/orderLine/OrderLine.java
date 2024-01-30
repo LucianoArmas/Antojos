@@ -3,6 +3,7 @@ package antojos.ecommerce.orderLine;
 import antojos.ecommerce.order.Order;
 import antojos.ecommerce.products.Product;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
 

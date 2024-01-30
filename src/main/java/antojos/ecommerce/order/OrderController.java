@@ -5,7 +5,6 @@ import java.util.List;
 import antojos.ecommerce.orderLine.OrderLine;
 import antojos.ecommerce.products.Product;
 import antojos.ecommerce.products.ProductService;
-import antojos.ecommerce.user.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +41,19 @@ public class OrderController {
     return "redirect:/";
   }
 
+  @PostMapping("/addProd")
+  public String addProd(@RequestParam Long numbOL, @RequestParam Long codOrder, HttpSession session){
+    OrderLine orderLine = orderService.getOrderLineByNumbAndCodeOrder(numbOL, codOrder);
+    Order order = orderService.getOrderByCod(codOrder);
+    if(orderLine != null){
+      orderService.addProdToOrderFromCart(session, order, orderLine);
+    }
+    return "/order/orderLines";
+  }
+
+
+
+
 
 
 
@@ -68,7 +80,7 @@ public class OrderController {
 
   @GetMapping("/edit/{cod}")
   public String editShopForm(@PathVariable Long cod, Model model){
-    Order shop = orderService.getShopByCod(cod);
+    Order shop = orderService.getOrderByCod(cod);
     model.addAttribute("order", shop);
     return "shoppings/edit";
   }

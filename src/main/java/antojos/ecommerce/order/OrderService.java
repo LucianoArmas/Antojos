@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 import antojos.ecommerce.user.User;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -40,7 +40,7 @@ public class OrderService {
   public List<Order> getByUserAndDate(User user, Date dateFrom, Date dateTo){
     return orderRepository.findByUserAndDateBetween(user, dateTo, dateTo);
   }
-  public Order getShopByCod(Long cod){
+  public Order getOrderByCod(Long cod){
     return orderRepository.findById(cod).orElse(null);
   }
 
@@ -66,28 +66,61 @@ public class OrderService {
     }
   }
 
+  public void updateOrder(HttpSession session, Order order, OrderLine orderLine, boolean flag_newOL){
+    orderLineRepository.save(orderLine);
+    List<OrderLine> orderLineList = getOrderLinesFromSession(session);
+
+    if(flag_newOL){
+      orderLineList.add(orderLine);
+    } else {
+      for (OrderLine ol : orderLineList) {
+        if (Objects.equals(ol.getNro(), orderLine.getNro())) {
+          orderLineList.remove(ol);
+          orderLineList.add(orderLine);
+          break;
+        }
+      }
+    }
+
+    updateOrderLinesInSession(session, orderLineList);
+
+    order.setOrderLineList(orderLineList);
+
+
+
+    order.calcuTotal();
+    orderRepository.save(order);
+    session.setAttribute("order", order);
+  }
+
   public void addProductToOrder(Product product, Order order, HttpSession session){
     OrderLine orderLine = orderLineRepository.findByProductAndOrder(product, order);
+    boolean flag_newOL = false;
     if (orderLine == null){
       orderLine = new OrderLine();
       orderLine.setProduct(product);
       orderLine.setOrder(order);
       orderLine.setSubTotPrice(product.getPrice());
       orderLine.setQuantityProds(1);
+      flag_newOL = true;
     }else{
       orderLine.setQuantityProds(orderLine.getQuantityProds()+1);
-      orderLine.setSubTotPrice(orderLine.getSubTotPrice()+(product.getPrice()));
+//      orderLine.setSubTotPrice(orderLine.getSubTotPrice()+(product.getPrice()));
+      orderLine.setSubTotPrice((float) 0);
+      orderLine.setSubTotPrice(orderLine.getQuantityProds()*(product.getPrice()));
     }
-    orderLineRepository.save(orderLine);
+    updateOrder(session, order, orderLine, flag_newOL);
 
-    List<OrderLine> orderLineList = getOrderLinesFromSession(session);
-    orderLineList.add(orderLine);
-    updateOrderLinesInSession(session, orderLineList);
+  }
 
-    order.setOrderLineList(orderLineList);
-    order.calcuTotal();
-    orderRepository.save(order);
+  public void addProdToOrderFromCart(HttpSession session, Order order, OrderLine orderLine){
+    orderLine.setQuantityProds(orderLine.getQuantityProds()+1);
+    orderLine.setSubTotPrice(orderLine.getSubTotPrice()+(orderLine.getProduct().getPrice()));
+    updateOrder(session, order, orderLine, false);
+  }
 
+  public OrderLine getOrderLineByNumbAndCodeOrder(Long numbOrderLine, Long codOrder){
+    return orderLineRepository.findByNumberAndOrderCod(numbOrderLine, codOrder);
   }
 
 
