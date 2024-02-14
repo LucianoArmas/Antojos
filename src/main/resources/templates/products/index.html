@@ -7,9 +7,14 @@
 
 <div th:replace="~{template.html :: sideMenu}"></div>
 
+<div class="mainContainer" th:if="${session.user}">
+    <div class="adminContainer" th:if="${session.user.getAccessLvl() == 'admin'}">
+        <p> WELCOME ADMIN <b th:text="${session.user.name}"></b></p>
+    </div>
+</div>
 
 
-<div class="prodContainer" style="display: grid; justify-content: center;" th:fragment="prodsCli">
+<div th:if="${(session.user == null) || (session.user.getAccessLvl() != 'admin')}" class="prodContainer" style="display: grid; justify-content: center;" th:fragment="prodsCli">
 <h1>PRODUCTS</h1>
     <div id="subTitleFood" style="display: flex; justify-content: space-between; align-items: center; justify-self: center; width: 80%;">
         <h2 style="justify-self: center; padding-bottom: 10px; padding-top: 10px">FOODS</h2>

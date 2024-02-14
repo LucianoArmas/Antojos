@@ -66,7 +66,7 @@ public class OrderService {
     }
   }
 
-  public void updateOrder(HttpSession session, Order order, OrderLine orderLine, boolean flag_newOL){
+  public void updateOrderPending(HttpSession session, Order order, OrderLine orderLine, boolean flag_newOL){
     orderLineRepository.save(orderLine);
     List<OrderLine> orderLineList = getOrderLinesFromSession(session);
 
@@ -82,15 +82,13 @@ public class OrderService {
       }
     }
 
-    updateOrderLinesInSession(session, orderLineList);
+    updateOrderLinesInSessionOrderPending(session, orderLineList);
 
     order.setOrderLineList(orderLineList);
 
-
-
     order.calcuTotal();
     orderRepository.save(order);
-    session.setAttribute("order", order);
+    session.setAttribute("orderPending", order);
   }
 
   public void addProductToOrder(Product product, Order order, HttpSession session){
@@ -109,14 +107,22 @@ public class OrderService {
       orderLine.setSubTotPrice((float) 0);
       orderLine.setSubTotPrice(orderLine.getQuantityProds()*(product.getPrice()));
     }
-    updateOrder(session, order, orderLine, flag_newOL);
+    updateOrderPending(session, order, orderLine, flag_newOL);
 
   }
 
   public void addProdToOrderFromCart(HttpSession session, Order order, OrderLine orderLine){
-    orderLine.setQuantityProds(orderLine.getQuantityProds()+1);
-    orderLine.setSubTotPrice(orderLine.getSubTotPrice()+(orderLine.getProduct().getPrice()));
-    updateOrder(session, order, orderLine, false);
+    modProdCountFromCart(session, order, orderLine, 1);
+  }
+
+  public void deleteProdToOrderFromCart(HttpSession session, Order order, OrderLine orderLine){
+    modProdCountFromCart(session, order, orderLine, -1);
+  }
+
+  private void modProdCountFromCart(HttpSession session, Order order, OrderLine orderLine, int quantMod){
+    orderLine.setQuantityProds(orderLine.getQuantityProds() + quantMod);
+    orderLine.setSubTotPrice(orderLine.getSubTotPrice()-(orderLine.getProduct().getPrice()));
+    updateOrderPending(session, order, orderLine, false);
   }
 
   public OrderLine getOrderLineByNumbAndCodeOrder(Long numbOrderLine, Long codOrder){
@@ -130,7 +136,7 @@ public class OrderService {
 
 
   public List<OrderLine> getOrderLinesFromSession(HttpSession session){
-    Order order = (Order) session.getAttribute("order");
+    Order order = (Order) session.getAttribute("orderPending");
     return getOrderLineByOrder(order);
 
 //    Object orderLines = session.getAttribute("orderLines");
@@ -140,9 +146,33 @@ public class OrderService {
 //      return Collections.emptyList();
 //    }
   }
-  public void updateOrderLinesInSession(HttpSession session, List<OrderLine> orderLineList){
+  public void updateOrderLinesInSessionOrderPending(HttpSession session, List<OrderLine> orderLineList){
     session.setAttribute("orderLineList", orderLineList);
   }
+
+  public void acceptOrder(Order order, HttpSession session){
+    order.setState("accepted");
+    orderRepository.save(order);
+    renewOrderPending(session);
+  }
+
+  public void renewOrderPending(HttpSession session){
+    session.removeAttribute("orderLineList");
+    session.removeAttribute("orderPending");
+
+    User user = (User) session.getAttribute("user");
+
+    Order order = getByUserAndState(user, "pending");
+
+    if(order == null){
+      Date today = new Date();
+      order = new Order(user,today, (float) 0,"pending");
+      addOrder(order);
+    }
+
+    session.setAttribute("orderPending", order);
+  }
+
 
 
   public void deleteShopping(Long cod){

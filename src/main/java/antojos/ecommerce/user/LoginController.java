@@ -48,7 +48,7 @@ public class LoginController {
       session.setAttribute("user", user);
 
       Order order = setOrderSession(user);
-      session.setAttribute("order", order);
+      session.setAttribute("orderPending", order);
 
       List<OrderLine> orderLineList = orderService.getOrderLinesFromSession(session);
       session.setAttribute("orderLineList", orderLineList);

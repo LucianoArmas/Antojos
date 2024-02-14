@@ -25,7 +25,7 @@ public class OrderController {
 
   @GetMapping("/cart")
   public String viewCart(Model model, HttpSession session){
-    Order order = (Order) session.getAttribute("order");
+    Order order = (Order) session.getAttribute("orderPending");
 //    List<OrderLine> orderLineList = orderService.getOrderLinesFromSession(session);
     List<OrderLine> orderLineList = order.getOrderLineList();
 
@@ -43,54 +43,79 @@ public class OrderController {
 
   @PostMapping("/addProd")
   public String addProd(@RequestParam Long numbOL, @RequestParam Long codOrder, HttpSession session){
+    return processOrderProd(numbOL, codOrder, session, true);
+  }
+
+  @PostMapping("/deleteProd")
+  public String deleteProd(@RequestParam Long numbOL, @RequestParam Long codOrder, HttpSession session){
+    return processOrderProd(numbOL, codOrder, session, false);
+  }
+
+  private String processOrderProd(Long numbOL, Long codOrder, HttpSession session, boolean isAdd){
     OrderLine orderLine = orderService.getOrderLineByNumbAndCodeOrder(numbOL, codOrder);
     Order order = orderService.getOrderByCod(codOrder);
-    if(orderLine != null){
-      orderService.addProdToOrderFromCart(session, order, orderLine);
+    if (orderLine != null){
+      if (isAdd){
+        orderService.addProdToOrderFromCart(session, order, orderLine);
+      }else {
+        orderService.deleteProdToOrderFromCart(session, order, orderLine);
+      }
     }
     return "/order/orderLines";
   }
 
 
 
+  @PostMapping("/acceptOrder/{orderCod}")
+  private String acceptOrder(@PathVariable Long orderCod, HttpSession session){
+    Order order = orderService.getOrderByCod(orderCod);
+    orderService.acceptOrder(order, session);
 
-
-
-
-  @GetMapping("/list")
-  public String listShops(Model model){
-    List<Order> shops = orderService.getAllOrders();
-    model.addAttribute("orders", shops);
-    return "shoppings/list";
+    return "redirect:/";
   }
 
 
 
-  @GetMapping("/add")
-  public String addShopForm(Model model){
-    model.addAttribute("order", new Order());
-    return "shoppings/add";
-  }
-  @PostMapping("/add")
-  public String addShop(@ModelAttribute Order shop){
-    orderService.addOrder(shop);
-    return "redirect:/shoppings/list";
-  }
 
 
-  @GetMapping("/edit/{cod}")
-  public String editShopForm(@PathVariable Long cod, Model model){
-    Order shop = orderService.getOrderByCod(cod);
-    model.addAttribute("order", shop);
-    return "shoppings/edit";
-  }
-  @PostMapping("/edit/{cod}")
-  public String editShop(@PathVariable Long cod, @ModelAttribute Order order){
-    orderService.updateShopping(order);
-    return "redirect:/shoppings/list";
-  }
 
 
+
+//  @GetMapping("/list")
+//  public String listShops(Model model){
+//    List<Order> shops = orderService.getAllOrders();
+//    model.addAttribute("orders", shops);
+//    return "shoppings/list";
+//  }
+//
+//
+//
+//  @GetMapping("/add")
+//  public String addShopForm(Model model){
+//    model.addAttribute("order", new Order());
+//    return "shoppings/add";
+//  }
+//  @PostMapping("/add")
+//  public String addShop(@ModelAttribute Order shop){
+//    orderService.addOrder(shop);
+//    return "redirect:/shoppings/list";
+//  }
+//
+//
+//  @GetMapping("/edit/{cod}")
+//  public String editShopForm(@PathVariable Long cod, Model model){
+//    Order shop = orderService.getOrderByCod(cod);
+//    model.addAttribute("order", shop);
+//    return "shoppings/edit";
+//  }
+//  @PostMapping("/edit/{cod}")
+//  public String editShop(@PathVariable Long cod, @ModelAttribute Order order){
+//    orderService.updateShopping(order);
+//    return "redirect:/shoppings/list";
+//  }
+
+
+  //TENDRIA Q CAMBIAR ESTE METODO, TANTO EL NOMBRE COMO LO QUE HACE (ES USADO PARA CUANDO EL CLIENTE CANCELA EL PEDIDO)
   @GetMapping("/delete/{cod}")
   public String deleteShgop(@PathVariable Long cod){
     orderService.deleteShopping(cod);
