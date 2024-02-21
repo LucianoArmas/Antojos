@@ -36,8 +36,15 @@ public class OrderController {
   @PostMapping("/addToCart")
   public String addToCart(@RequestParam Long id, HttpSession session){
     Product product = productService.getProductById(id);
-    Order order = (Order) session.getAttribute("order");
-    orderService.addProductToOrder(product, order, session);
+    Order order = (Order) session.getAttribute("orderPending");
+    boolean flag_thereIsStock = orderService.addProductToOrder(product, order, session);
+
+    if (flag_thereIsStock){
+      orderService.updateProdStock(id, product.getStock()-1);
+    }else {
+      orderService.updateProdStock(id, product.getStock()+1);
+    }
+
     return "redirect:/";
   }
 
@@ -54,13 +61,21 @@ public class OrderController {
   private String processOrderProd(Long numbOL, Long codOrder, HttpSession session, boolean isAdd){
     OrderLine orderLine = orderService.getOrderLineByNumbAndCodeOrder(numbOL, codOrder);
     Order order = orderService.getOrderByCod(codOrder);
+    boolean flag_thereIsStock = false;
+
     if (orderLine != null){
       if (isAdd){
-        orderService.addProdToOrderFromCart(session, order, orderLine);
+        flag_thereIsStock = orderService.addProdToOrderFromCart(session, order, orderLine);
       }else {
-        orderService.deleteProdToOrderFromCart(session, order, orderLine);
+         orderService.deleteProdToOrderFromCart(session, order, orderLine);
+        orderService.updateProdStock(orderLine.getProduct().getId(), orderLine.getProduct().getStock()+1);
       }
     }
+
+    if(flag_thereIsStock){
+      orderService.updateProdStock(orderLine.getProduct().getId(), orderLine.getProduct().getStock()-1);
+    }
+
     return "/order/orderLines";
   }
 

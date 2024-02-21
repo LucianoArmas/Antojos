@@ -3,7 +3,9 @@ package antojos.ecommerce.order;
 import antojos.ecommerce.orderLine.OrderLine;
 import antojos.ecommerce.orderLine.OrderLineRepository;
 import antojos.ecommerce.products.Product;
+import antojos.ecommerce.products.ProductRepository;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import antojos.ecommerce.user.User;
@@ -19,9 +21,12 @@ public class OrderService {
 
   private final OrderLineRepository orderLineRepository;
 
-  public OrderService(OrderRepository orderRepository, OrderLineRepository orderLineRepository) {
+  private final ProductRepository productRepository;
+
+  public OrderService(OrderRepository orderRepository, OrderLineRepository orderLineRepository, ProductRepository productRepository) {
     this.orderRepository = orderRepository;
     this.orderLineRepository = orderLineRepository;
+    this.productRepository = productRepository;
   }
 
   public List<Order> getAllOrders(){
@@ -66,17 +71,27 @@ public class OrderService {
     }
   }
 
-  public void updateOrderPending(HttpSession session, Order order, OrderLine orderLine, boolean flag_newOL){
-    orderLineRepository.save(orderLine);
-    List<OrderLine> orderLineList = getOrderLinesFromSession(session);
+
+
+  public void updateOrderPending(HttpSession session, Order order, OrderLine orderLine, boolean flag_newOL, boolean flag_DeleteOL){
+    List<OrderLine> orderLineList = (List<OrderLine>) session.getAttribute("orderLineList");
 
     if(flag_newOL){
       orderLineList.add(orderLine);
-    } else {
+    } else{
       for (OrderLine ol : orderLineList) {
         if (Objects.equals(ol.getNro(), orderLine.getNro())) {
           orderLineList.remove(ol);
           orderLineList.add(orderLine);
+          break;
+        }
+      }
+    }
+
+    if(flag_DeleteOL){
+      for (OrderLine ol : orderLineList) {
+        if (Objects.equals(ol.getNro(), orderLine.getNro())) {
+          orderLineList.remove(ol);
           break;
         }
       }
@@ -89,30 +104,55 @@ public class OrderService {
     order.calcuTotal();
     orderRepository.save(order);
     session.setAttribute("orderPending", order);
+
   }
 
-  public void addProductToOrder(Product product, Order order, HttpSession session){
+  public boolean verifyProdStock(Product product, int quantityProdToAdd){
+    return product.getStock() >= quantityProdToAdd;
+  }
+
+  public boolean addProductToOrder(Product product, Order order, HttpSession session){
     OrderLine orderLine = orderLineRepository.findByProductAndOrder(product, order);
-    boolean flag_newOL = false;
+    boolean flag_thereIsStock;
     if (orderLine == null){
-      orderLine = new OrderLine();
-      orderLine.setProduct(product);
-      orderLine.setOrder(order);
-      orderLine.setSubTotPrice(product.getPrice());
-      orderLine.setQuantityProds(1);
-      flag_newOL = true;
+      flag_thereIsStock = verifyProdStock(product,1);
+      if(flag_thereIsStock){
+        orderLine = new OrderLine();
+        orderLine.setProduct(product);
+        orderLine.setOrder(order);
+        orderLine.setSubTotPrice(product.getPrice());
+        orderLine.setQuantityProds(1);
+        orderLineRepository.save(orderLine);
+        updateOrderPending(session, order, orderLine, true, false);
+      }
     }else{
-      orderLine.setQuantityProds(orderLine.getQuantityProds()+1);
-//      orderLine.setSubTotPrice(orderLine.getSubTotPrice()+(product.getPrice()));
-      orderLine.setSubTotPrice((float) 0);
-      orderLine.setSubTotPrice(orderLine.getQuantityProds()*(product.getPrice()));
+      flag_thereIsStock = verifyProdStock(product,(orderLine.getQuantityProds()+1));
+      if(flag_thereIsStock){
+        orderLine.setQuantityProds(orderLine.getQuantityProds()+1);
+        orderLine.setSubTotPrice(orderLine.getQuantityProds()*(product.getPrice()));
+        orderLineRepository.save(orderLine);
+        updateOrderPending(session, order, orderLine, false, false);
+      }
     }
-    updateOrderPending(session, order, orderLine, flag_newOL);
+
+    return flag_thereIsStock;
+
 
   }
 
-  public void addProdToOrderFromCart(HttpSession session, Order order, OrderLine orderLine){
-    modProdCountFromCart(session, order, orderLine, 1);
+
+  @Transactional
+  public void updateProdStock(Long id, int newStock){
+    productRepository.updateProductStock(id, newStock);
+  }
+
+  public boolean addProdToOrderFromCart(HttpSession session, Order order, OrderLine orderLine){
+    boolean flag_thereIsStock = false;
+    if(verifyProdStock(orderLine.getProduct(), (orderLine.getQuantityProds()+1))){
+      modProdCountFromCart(session, order, orderLine, 1);
+      flag_thereIsStock = true;
+    }
+    return flag_thereIsStock;
   }
 
   public void deleteProdToOrderFromCart(HttpSession session, Order order, OrderLine orderLine){
@@ -120,9 +160,15 @@ public class OrderService {
   }
 
   private void modProdCountFromCart(HttpSession session, Order order, OrderLine orderLine, int quantMod){
+    boolean flag_DeleteOL = false;
     orderLine.setQuantityProds(orderLine.getQuantityProds() + quantMod);
-    orderLine.setSubTotPrice(orderLine.getSubTotPrice()-(orderLine.getProduct().getPrice()));
-    updateOrderPending(session, order, orderLine, false);
+    if (orderLine.getQuantityProds() > 0) {
+      orderLine.setSubTotPrice(orderLine.getSubTotPrice() + (quantMod) * (orderLine.getProduct().getPrice()));
+    }else {
+      orderLineRepository.delete(orderLine);
+      flag_DeleteOL = true;
+    }
+    updateOrderPending(session, order, orderLine, false, flag_DeleteOL);
   }
 
   public OrderLine getOrderLineByNumbAndCodeOrder(Long numbOrderLine, Long codOrder){
