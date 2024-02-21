@@ -42,6 +42,7 @@ public class OrderService {
   }
 
   public Order getByUserAndState(User user, String state){return orderRepository.findByUserAndState(user, state);}
+  public List<Order> getOrdersByUserAndState(User user, String state){return orderRepository.findOrdersByUserAndState(user,state);}
   public List<Order> getByUserAndDate(User user, Date dateFrom, Date dateTo){
     return orderRepository.findByUserAndDateBetween(user, dateTo, dateTo);
   }

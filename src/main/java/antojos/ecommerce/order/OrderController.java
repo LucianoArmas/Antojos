@@ -5,6 +5,7 @@ import java.util.List;
 import antojos.ecommerce.orderLine.OrderLine;
 import antojos.ecommerce.products.Product;
 import antojos.ecommerce.products.ProductService;
+import antojos.ecommerce.user.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -99,7 +100,16 @@ public class OrderController {
 
   }
 
+@GetMapping("ordersAccepted")
+public String getOrdersAccepted(Model model, HttpSession session){
+  User user = (User) session.getAttribute("user");
 
+  List<Order> orderList = orderService.getOrdersByUserAndState(user, "accepted");
+
+  model.addAttribute("ordersAccepted", orderList);
+
+  return "/users/ordersAccepted";
+}
 
 
 
