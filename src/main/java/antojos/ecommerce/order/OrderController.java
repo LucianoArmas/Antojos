@@ -37,14 +37,7 @@ public class OrderController {
   public String addToCart(@RequestParam Long id, HttpSession session){
     Product product = productService.getProductById(id);
     Order order = (Order) session.getAttribute("orderPending");
-    boolean flag_thereIsStock = orderService.addProductToOrder(product, order, session);
-
-    if (flag_thereIsStock){
-      orderService.updateProdStock(id, product.getStock()-1);
-    }else {
-      orderService.updateProdStock(id, product.getStock()+1);
-    }
-
+    orderService.addProductToOrder(product, order, session);
     return "redirect:/";
   }
 
@@ -61,20 +54,19 @@ public class OrderController {
   private String processOrderProd(Long numbOL, Long codOrder, HttpSession session, boolean isAdd){
     OrderLine orderLine = orderService.getOrderLineByNumbAndCodeOrder(numbOL, codOrder);
     Order order = orderService.getOrderByCod(codOrder);
-    boolean flag_thereIsStock = false;
 
     if (orderLine != null){
       if (isAdd){
-        flag_thereIsStock = orderService.addProdToOrderFromCart(session, order, orderLine);
+        orderService.addProdToOrderFromCart(session, order, orderLine);
       }else {
          orderService.deleteProdToOrderFromCart(session, order, orderLine);
-        orderService.updateProdStock(orderLine.getProduct().getId(), orderLine.getProduct().getStock()+1);
+//        orderService.updateProdStock(orderLine.getProduct().getId(), orderLine.getProduct().getStock()+1);
       }
     }
 
-    if(flag_thereIsStock){
-      orderService.updateProdStock(orderLine.getProduct().getId(), orderLine.getProduct().getStock()-1);
-    }
+//    if(flag_thereIsStock){
+//      orderService.updateProdStock(orderLine.getProduct().getId(), orderLine.getProduct().getStock()-1);
+//    }
 
     return "/order/orderLines";
   }
@@ -82,11 +74,29 @@ public class OrderController {
 
 
   @PostMapping("/acceptOrder/{orderCod}")
-  private String acceptOrder(@PathVariable Long orderCod, HttpSession session){
+  private String acceptOrder(@PathVariable Long orderCod, HttpSession session, Model model){
     Order order = orderService.getOrderByCod(orderCod);
-    orderService.acceptOrder(order, session);
+    boolean flag_StockAccepted = true;
+    Product prodStockNoAccepted=null;
 
-    return "redirect:/";
+    for (OrderLine ol: order.getOrderLineList()) {
+      if(orderService.verifyProdStock(ol.getProduct(), ol.getQuantityProds())){
+        orderService.updateProdStock(ol.getProduct().getId(), (ol.getProduct().getStock() - ol.getQuantityProds()));
+      }else{
+        flag_StockAccepted = false;
+        prodStockNoAccepted = ol.getProduct(); //AUN NO SE COMO IMPLEMENTARLO
+        break;
+      }
+    }
+
+    if(flag_StockAccepted){
+      orderService.acceptOrder(order, session);
+      return "redirect:/";
+    }else{
+      model.addAttribute("errorProdStock", prodStockNoAccepted);
+      return "/order/orderLines";
+    }
+
   }
 
 

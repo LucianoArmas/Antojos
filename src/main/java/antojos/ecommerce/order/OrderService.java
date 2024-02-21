@@ -111,7 +111,7 @@ public class OrderService {
     return product.getStock() >= quantityProdToAdd;
   }
 
-  public boolean addProductToOrder(Product product, Order order, HttpSession session){
+  public void addProductToOrder(Product product, Order order, HttpSession session){
     OrderLine orderLine = orderLineRepository.findByProductAndOrder(product, order);
     boolean flag_thereIsStock;
     if (orderLine == null){
@@ -135,8 +135,9 @@ public class OrderService {
       }
     }
 
-    return flag_thereIsStock;
-
+    if (!flag_thereIsStock){
+      System.out.println("NO HAY STOCK"); //Ver como manejar la situacion en caso de no haber stock
+    }
 
   }
 
@@ -146,13 +147,13 @@ public class OrderService {
     productRepository.updateProductStock(id, newStock);
   }
 
-  public boolean addProdToOrderFromCart(HttpSession session, Order order, OrderLine orderLine){
-    boolean flag_thereIsStock = false;
-    if(verifyProdStock(orderLine.getProduct(), (orderLine.getQuantityProds()+1))){
+  public void addProdToOrderFromCart(HttpSession session, Order order, OrderLine orderLine){
+    boolean flag_thereIsStock = verifyProdStock(orderLine.getProduct(), (orderLine.getQuantityProds()+1));
+    if(flag_thereIsStock){
       modProdCountFromCart(session, order, orderLine, 1);
-      flag_thereIsStock = true;
+    }else {
+      System.out.println("NO HAY STOCK"); //Ver como manejar la situacion en caso de no haber stock
     }
-    return flag_thereIsStock;
   }
 
   public void deleteProdToOrderFromCart(HttpSession session, Order order, OrderLine orderLine){
@@ -217,6 +218,7 @@ public class OrderService {
     }
 
     session.setAttribute("orderPending", order);
+    session.setAttribute("orderLineList", getOrderLinesFromSession(session));
   }
 
 
