@@ -85,7 +85,7 @@ public class OrderController {
         orderService.updateProdStock(ol.getProduct().getId(), (ol.getProduct().getStock() - ol.getQuantityProds()));
       }else{
         flag_StockAccepted = false;
-        prodStockNoAccepted = ol.getProduct(); //AUN NO SE COMO IMPLEMENTARLO
+        prodStockNoAccepted = ol.getProduct(); //AUN NO SE COMO IMPLEMENTARLO - XQ DIRECTAMENTE NO PASA X EL FALSO, XQ SI VE Q NO HAY STOCK NO TE DEJA PONER EL PROD EN EL CART
         break;
       }
     }
@@ -108,10 +108,37 @@ public String getOrdersAccepted(Model model, HttpSession session){
 
   model.addAttribute("ordersAccepted", orderList);
 
-  return "/users/ordersAccepted";
+  return "ordersAccepted(ELIMINAR-QUIZAS)";
+}
+  @GetMapping("orderList")
+  public String getOrderList(Model model, HttpSession session){
+    User user = (User) session.getAttribute("user");
+
+    List<Order> orderListAccepted = orderService.getOrdersByUserAndState(user, "accepted");
+    List<Order> orderListCancelled = orderService.getOrdersByUserAndState(user, "cancelled");
+    List<Order> orderListDelivered = orderService.getOrdersByUserAndState(user, "delivered");
+
+    model.addAttribute("ordersAccepted", orderListAccepted);
+    model.addAttribute("ordersCancelled", orderListCancelled);
+    model.addAttribute("ordersDelivered", orderListDelivered);
+
+    return "/order/orderList";
+  }
+
+
+@PostMapping("/cancel")
+public String cancelOrder(@RequestParam Long cod){
+    orderService.cancelOrder(cod);
+    return "redirect:/orders/orderList";
 }
 
 
+
+  @PostMapping("/delete")
+  public String deleteOrder(@RequestParam Long cod){
+    orderService.deleteOrder(cod);
+    return "redirect:/shoppings/list";
+  }
 
 
 
@@ -150,11 +177,6 @@ public String getOrdersAccepted(Model model, HttpSession session){
 //  }
 
 
-  //TENDRIA Q CAMBIAR ESTE METODO, TANTO EL NOMBRE COMO LO QUE HACE (ES USADO PARA CUANDO EL CLIENTE CANCELA EL PEDIDO)
-  @GetMapping("/delete/{cod}")
-  public String deleteShgop(@PathVariable Long cod){
-    orderService.deleteShopping(cod);
-    return "redirect:/shoppings/list";
-  }
+
 
 }

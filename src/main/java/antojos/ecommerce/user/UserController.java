@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Objects;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -40,17 +42,47 @@ public class UserController {
     return "redirect:/users/list";
   }
 
-
-  @GetMapping("/edit/{dni}")
-  public String editUserForm(@PathVariable String dni, Model model){
-    User user = userService.getUserByDni(dni);
-    model.addAttribute("user", user);
-    return "users/edit";
+  private boolean resetFlagEditPass(HttpSession session){
+    boolean flag = true;
+    if((session.getAttribute("flag_editPass") == null)||(session.getAttribute("flag_editPass").equals(true))){
+      flag = false;
+    }
+    return flag;
   }
-  @PostMapping("/edit/{dni}")
-  public String editUser(@PathVariable String dni, @ModelAttribute User user){
-    userService.updateUser(user);
-    return "redirect:/users/list";
+
+  @GetMapping("/edit")
+  public String editUserForm( Model model, HttpSession session){
+    User userSession = (User) session.getAttribute("user");
+    String dniUser = userSession.getDni();
+
+    User userBD = userService.getUserByDni(dniUser);
+
+    model.addAttribute("user", userBD);
+
+    boolean flagEditPassReset = resetFlagEditPass(session);
+    session.setAttribute("flag_editPass", flagEditPassReset);
+
+    return "/users/editProfile";
+  }
+  @PostMapping("/editUser")
+  public String editUser(@RequestParam String dni, @ModelAttribute("user") @Valid User newUser, HttpSession session, BindingResult result){
+    userService.updateUser(newUser,dni);
+    session.setAttribute("flag_editPass", false);
+    return "/users/editProfile";
+  }
+
+  @PostMapping("/editPass")
+  public String editPass(HttpSession session, @RequestParam String pass, @RequestParam String dni, Model model){
+    User userFound = userService.findByDniAndUserPass(dni,pass);
+    User userSession = (User) session.getAttribute("user");
+    if(userFound != null){
+      session.setAttribute("flag_editPass", true);
+    }else {
+      session.setAttribute("flag_editPass", false);
+      model.addAttribute("error", "Incorrect password");
+    }
+    model.addAttribute("user", userSession);
+    return "/users/editProfile";
   }
 
 

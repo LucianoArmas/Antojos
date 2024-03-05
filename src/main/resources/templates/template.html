@@ -87,7 +87,9 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark">
                             <li><p class="dropdown-item-text" th:text="${session.user.name}+' '+${session.user.lastName}"></p></li>
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li>
+                                <a class="dropdown-item" href="/users/edit">Profile</a>
+                            </li>
 <!--                            <li><a class="dropdown-item" href="#">Cart</a></li>-->
 <!--                            <li><a class="dropdown-item" href="#">Something else here</a></li>-->
                             <li><hr class="dropdown-divider"></li>
@@ -116,7 +118,8 @@
                 </div>
                 <div th:unless="${session.user.getAccessLvl() == 'admin'}" class="offcanvas-body">
                     <a class="btn btn-outline-dark" href="/">Directions</a>
-                    <a class="btn btn-outline-dark" href="/orders/ordersAccepted">Orders</a>
+<!--                    <a class="btn btn-outline-dark" href="/orders/ordersAccepted">Orders</a> ESTE ES EL LISTADO DE LAS ORDENES ACEPTADAS-->
+                    <a class="btn btn-outline-dark" href="/orders/orderList">Orders</a>
                     <a class="btn btn-outline-danger" href="/logout">Log Out</a>
                 </div>
             </div>

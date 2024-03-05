@@ -52,7 +52,7 @@ public class LoginController {
 
       List<OrderLine> orderLineList = orderService.getOrderLinesFromSession(session);
       session.setAttribute("orderLineList", orderLineList);
-      return "redirect:/";
+      return "redirect:";
     } else {
       model.addAttribute("error", "Invalid user");
       return "/users/login";

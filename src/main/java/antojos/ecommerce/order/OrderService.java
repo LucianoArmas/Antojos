@@ -223,8 +223,14 @@ public class OrderService {
   }
 
 
+  public void cancelOrder(Long cod){
+    Order order = getOrderByCod(cod);
+    order.setState("cancelled");
+    orderRepository.save(order);
+  }
 
-  public void deleteShopping(Long cod){
+
+  public void deleteOrder(Long cod){
     orderRepository.deleteById(cod);
   }
 }
