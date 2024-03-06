@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import antojos.ecommerce.products.drink.Drink;
-import antojos.ecommerce.products.food.Food;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,8 +15,13 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  public Map<String, List<Product>>  getAllProducts(){
-    List<Product> productList = productRepository.findAll();
+  public Map<String, List<Product>> getProducts(String name){
+    List<Product> productList;
+    if (name.isBlank()){
+      productList = productRepository.findAll();
+    }else {
+      productList = productRepository.findByNameContainingIgnoreCase(name);
+    }
 
     Map<String, List<Product>> prodByType = new HashMap<>();
 
@@ -33,6 +36,7 @@ public class ProductService {
   public Product getProductById(Long id){
     return productRepository.findById(id).orElse(null);
   }
+
 
   public void addProduct(Product product){
     productRepository.save(product);
