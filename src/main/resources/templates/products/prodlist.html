@@ -3,15 +3,8 @@
 <head th:replace="~{template.html :: head}"></head>
 <body>
     <header th:replace="~{template.html :: header}"></header>
-    
-    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-        <div class="offcanvas-header d-flex justify-content-end top-0">
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <p>xd</p>
-        </div>
-    </div>
+
+    <div th:replace="~{template.html :: sideMenu}"></div>
 
     <h1>PRODUCTS</h1>
     <div class="prodContainer" style="display: grid; justify-content: center;">
