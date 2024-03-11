@@ -4,12 +4,15 @@ import java.util.List;
 
 import antojos.ecommerce.orderLine.OrderLine;
 import antojos.ecommerce.products.Product;
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("drink")
 public class Drink extends Product{
+
+  @Column(name = "mililts")
   private Float mililts;
 
   public Drink() {

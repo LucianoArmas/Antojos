@@ -28,7 +28,7 @@ public class UserService {
     userRepository.save(user);
   }
 
-  public void updateUser(User newUser, String dni){
+  public void updateUser(User newUser, String dni, boolean flag_editFromAdmin){
     User user = getUserByDni(dni);
     if(user != null){
       user.setDni(dni);
@@ -36,10 +36,14 @@ public class UserService {
       user.setName(newUser.getName());
       user.setLastName(newUser.getLastName());
       user.setOrders(newUser.getOrders());
+
       if((newUser.getUserPass() == null) || (newUser.getUserPass().isBlank())){
         user.setUserPass(user.getUserPass());
       }else {user.setUserPass(newUser.getUserPass());}
-      user.setAccessLvl("client");
+
+      if (flag_editFromAdmin){
+        user.setAccessLvl(newUser.getAccessLvl());
+      }else{user.setAccessLvl("client");}
 
       userRepository.save(user);
     }

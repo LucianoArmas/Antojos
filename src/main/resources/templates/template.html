@@ -26,7 +26,7 @@
 
 
 
-                <div class="col-7 d-flex align-content-center" style="justify-content: center">
+                <div th:if="${session.user == null || session.user.getAccessLvl() != 'admin'}" class="col-7 d-flex align-content-center" style="justify-content: center">
                     <form class=" d-flex" role="search" style="width: 40rem;" action="/search">
                         <input name="query" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-primary d-grid align-content-center" type="submit">
@@ -39,8 +39,8 @@
 
 
 
-                <div th:if="${session.user}"  class="col-3 d-flex align-content-center dropDowns">
-                    <div class="dropdown-center dropdownCart">
+                <div th:if="${session.user}"  class="col-3 d-flex align-content-center dropDowns" style="display: flex; position: fixed; right: 0;">
+                    <div class="dropdown-center dropdownCart" th:if="${session.user.accessLvl == 'client'}">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shopping-cart" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -50,7 +50,7 @@
                                 <path d="M6 5l14 1l-1 7h-13" />
                             </svg>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-dark ">
+                        <div th:if="${!session.orderLineList.isEmpty()}" class="dropdown-menu dropdown-menu-dark ">
                             <table class="table dropdown-item-text">
                                 <thead>
                                 <tr>
@@ -73,6 +73,9 @@
                                 </tbody>
                             </table>
                             <a class="btn btn-outline-warning" href="/orders/cart" style="display: block; margin: 10px">View Cart</a>
+                        </div>
+                        <div th:if="${session.orderLineList.isEmpty()}" class="dropdown-menu dropdown-menu-dark" style="display: grid; justify-content: center;">
+                            <p style="color: #EF3B3A"><b>Empty cart</b></p>
                         </div>
                     </div>
 
@@ -113,11 +116,12 @@
             <div th:if="${session.user}" class="sideMenu">
                 <div th:if="${session.user.getAccessLvl() == 'admin'}" class="offcanvas-body">
                     <a class="btn btn-outline-dark" href="/users/list">Users</a>
-                    <a class="btn btn-outline-dark" href="/">Orders</a>
+                    <a class="btn btn-outline-dark" href="/products/prodsList">Products</a>
+                    <a class="btn btn-outline-dark" href="/orders/orderListAdmin">Orders</a>
                     <a class="btn btn-outline-danger" href="/logout">Log Out</a>
                 </div>
                 <div th:unless="${session.user.getAccessLvl() == 'admin'}" class="offcanvas-body">
-                    <a class="btn btn-outline-dark" href="/">Directions</a>
+<!--                    <a class="btn btn-outline-dark" href="/">Directions</a>-->
 <!--                    <a class="btn btn-outline-dark" href="/orders/ordersAccepted">Orders</a> ESTE ES EL LISTADO DE LAS ORDENES ACEPTADAS-->
                     <a class="btn btn-outline-dark" href="/orders/orderList">Orders</a>
                     <a class="btn btn-outline-danger" href="/logout">Log Out</a>

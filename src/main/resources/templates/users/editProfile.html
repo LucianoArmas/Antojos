@@ -7,7 +7,7 @@
 
 <div class="editProfile-page" style="display: grid; justify-content: center;">
     <div class="formEditProfile" style="display: grid;">
-        <form th:action="@{/users/editUser}" th:object="${user}" method="post" class="editProfile-form forms" id="formEditProfile" style="display: grid;">
+        <form th:action="@{/users/editProfile}" th:object="${user}" method="post" class="editProfile-form forms" id="formEditProfile" style="display: grid;">
             <h2>Edit your profile</h2>
             <label for="editName" style="margin-top: 1rem;">Name</label>
             <input type="text" th:field="*{name}" th:value="${user.name}" name="name" id="editName"/>
@@ -18,13 +18,13 @@
             <label for="editEmail" style="margin-top: 1rem;">Email</label>
             <input type="text" th:field="*{email}" th:value="${user.email}" name="email" id="editEmail"/>
 
-            <div th:if="${session.flag_editPass}" style="display: grid;">
+            <div th:if="${session.flag_canEditPass}" style="display: grid;">
                 <label for="editPassword" style="margin-top: 1rem;">New password</label>
                 <input type="password" th:field="*{userPass}" name="newPassword" id="editPassword">
             </div>
 
             <!-- Button trigger modal -->
-            <button th:if="${(!session.flag_editPass)}" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#editPassModal" style="margin-top: 1rem;">
+            <button th:if="${(!session.flag_canEditPass)}" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#editPassModal" style="margin-top: 1rem;">
                 Edit Password
             </button>
 

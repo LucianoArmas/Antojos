@@ -2,13 +2,10 @@ package antojos.ecommerce.products.drink;
 
 import java.util.List;
 
+import antojos.ecommerce.products.food.Food;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
@@ -19,6 +16,22 @@ public class DrinkController {
   public DrinkController(DrinkService drinkService) {
     this.drinkService = drinkService;
   }
+
+
+  @PostMapping("/edit")
+  public String editDrink(@RequestParam Long id, @RequestParam String name, @RequestParam String desc, @RequestParam Float price, @RequestParam int stock, @RequestParam Float lts){
+    Drink drink = new Drink();
+    drink.setId(id);
+    drink.setName(name);
+    drink.setDescription(desc);
+    drink.setPrice(price);
+    drink.setStock(stock);
+    drink.setMililts(lts);
+    drinkService.updateDrink(drink);
+    return "redirect:/products/prodsList";
+  }
+
+
 
   @GetMapping("/list")
   public String listDrinks(Model model){
@@ -40,15 +53,4 @@ public class DrinkController {
   }
 
 
-  @GetMapping("/edit/{id}")
-  public String editDrinkForm(@PathVariable Long id, Model model){
-    Drink drink = drinkService.getDrinkById(id);
-    model.addAttribute("drink", drink);
-    return "drinks/edit";
-  }
-  @PostMapping("/edit/{id}")
-  public String editDrink(@PathVariable Long id, @ModelAttribute Drink drink){
-    drinkService.updateDrink(drink);
-    return "redirect:/drinks/list";
-  }
 }

@@ -4,12 +4,14 @@ import java.util.List;
 
 import antojos.ecommerce.orderLine.OrderLine;
 import antojos.ecommerce.products.Product;
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("food")
 public class Food extends Product{
+  @Column(name = "amount_people_eat")
   private int amountPeopleEat;
 
   public Food(){}

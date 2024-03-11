@@ -44,7 +44,7 @@ public class UserController {
 
   private boolean resetFlagEditPass(HttpSession session){
     boolean flag = true;
-    if((session.getAttribute("flag_editPass") == null)||(session.getAttribute("flag_editPass").equals(true))){
+    if((session.getAttribute("editPassForm") == null)||(session.getAttribute("editPassForm").equals(true))){
       flag = false;
     }
     return flag;
@@ -60,14 +60,14 @@ public class UserController {
     model.addAttribute("user", userBD);
 
     boolean flagEditPassReset = resetFlagEditPass(session);
-    session.setAttribute("flag_editPass", flagEditPassReset);
+    session.setAttribute("flag_canEditPass", flagEditPassReset);
 
     return "/users/editProfile";
   }
-  @PostMapping("/editUser")
-  public String editUser(@RequestParam String dni, @ModelAttribute("user") @Valid User newUser, HttpSession session, BindingResult result){
-    userService.updateUser(newUser,dni);
-    session.setAttribute("flag_editPass", false);
+  @PostMapping("/editProfile")
+  public String editProfile(@RequestParam String dni, @ModelAttribute("user") @Valid User newUser, HttpSession session, BindingResult result){
+    userService.updateUser(newUser,dni, false);
+    session.setAttribute("flag_canEditPass", false);
     return "/users/editProfile";
   }
 
@@ -76,13 +76,28 @@ public class UserController {
     User userFound = userService.findByDniAndUserPass(dni,pass);
     User userSession = (User) session.getAttribute("user");
     if(userFound != null){
-      session.setAttribute("flag_editPass", true);
+      session.setAttribute("flag_canEditPass", true);
+      session.setAttribute("editPassForm", true);
     }else {
-      session.setAttribute("flag_editPass", false);
+      session.setAttribute("flag_canEditPass", false);
+      session.setAttribute("editPassForm", false);
       model.addAttribute("error", "Incorrect password");
     }
     model.addAttribute("user", userSession);
     return "/users/editProfile";
+  }
+
+
+  @PostMapping("/editUser")
+  public String editUser(@RequestParam String dni, @RequestParam String name, @RequestParam String lastname, @RequestParam String email, @RequestParam String lvlAcc){
+    User userEdit = new User();
+    userEdit.setName(name);
+    userEdit.setLastName(lastname);
+    userEdit.setDni(dni);
+    userEdit.setAccessLvl(lvlAcc);
+    userEdit.setEmail(email);
+    userService.updateUser(userEdit, dni, true);
+    return "redirect:/users/list";
   }
 
 

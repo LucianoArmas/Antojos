@@ -100,7 +100,7 @@ public class OrderController {
 
   }
 
-@GetMapping("ordersAccepted")
+@GetMapping("ordersAccepted") //MEPA Q LO TENGO Q ELIMINAR A ESTE METODO
 public String getOrdersAccepted(Model model, HttpSession session){
   User user = (User) session.getAttribute("user");
 
@@ -110,20 +110,48 @@ public String getOrdersAccepted(Model model, HttpSession session){
 
   return "ordersAccepted(ELIMINAR-QUIZAS)";
 }
-  @GetMapping("orderList")
-  public String getOrderList(Model model, HttpSession session){
-    User user = (User) session.getAttribute("user");
 
-    List<Order> orderListAccepted = orderService.getOrdersByUserAndState(user, "accepted");
-    List<Order> orderListCancelled = orderService.getOrdersByUserAndState(user, "cancelled");
-    List<Order> orderListDelivered = orderService.getOrdersByUserAndState(user, "delivered");
 
-    model.addAttribute("ordersAccepted", orderListAccepted);
-    model.addAttribute("ordersCancelled", orderListCancelled);
-    model.addAttribute("ordersDelivered", orderListDelivered);
+@GetMapping("orderList")
+public String getOrderList(Model model, HttpSession session){
 
-    return "/order/orderList";
-  }
+User user = (User) session.getAttribute("user");
+List<Order> orderListAccepted = orderService.getOrdersByUserAndState(user, "accepted");
+List<Order> orderListCancelled = orderService.getOrdersByUserAndState(user, "cancelled");
+List<Order> orderListDelivered = orderService.getOrdersByUserAndState(user, "delivered");
+
+model.addAttribute("ordersAccepted", orderListAccepted);
+model.addAttribute("ordersCancelled", orderListCancelled);
+model.addAttribute("ordersDelivered", orderListDelivered);
+
+return "/order/orderList";
+
+}
+
+
+@GetMapping("/orderListAdmin")
+public String getOrderListAdmin(Model model){
+    List<Order> orderListAccepted = orderService.getAllByState("accepted");
+    List<Order> orderListCancelled = orderService.getAllByState("cancelled");
+    List<Order> orderListDelivered = orderService.getAllByState("delivered");
+
+    model.addAttribute("orderListAccepted", orderListAccepted);
+    model.addAttribute("orderListCancelled", orderListCancelled);
+    model.addAttribute("orderListDelivered", orderListDelivered);
+
+    return "/order/orderListAdmin";
+}
+
+
+@PostMapping("/modStatusAdmin")
+public String modOrderStatusAdmin(@RequestParam Long cod, @RequestParam String orderStatus){
+    Order order = orderService.getOrderByCod(cod);
+    orderService.updateOrder(order, orderStatus);
+
+    return "redirect:/orders/orderListAdmin";
+}
+
+
 
 
 @PostMapping("/cancel")

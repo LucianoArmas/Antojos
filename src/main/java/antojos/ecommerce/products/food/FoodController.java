@@ -4,11 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
@@ -19,6 +15,21 @@ public class FoodController {
   public FoodController(FoodService foodService) {
     this.foodService = foodService;
   }
+
+
+  @PostMapping("/edit")
+  public String editFood(@RequestParam Long id, @RequestParam String name, @RequestParam String desc, @RequestParam Float price, @RequestParam int stock, @RequestParam int amountPeople){
+    Food food = new Food();
+    food.setId(id);
+    food.setName(name);
+    food.setDescription(desc);
+    food.setPrice(price);
+    food.setStock(stock);
+    food.setAmountPeopleEat(amountPeople);
+    foodService.updateFood(food);
+    return "redirect:/products/prodsList";
+  }
+
 
   @GetMapping("/list")
   public String listFoods(Model model){
@@ -39,17 +50,6 @@ public class FoodController {
     return "redirect:/foods/list";
   }
 
-  
-  @GetMapping("/edit/{id}")
-  public String editFoodForm(@PathVariable Long id, Model model){
-    Food food = foodService.getFoodById(id);
-    model.addAttribute("food", food);
-    return "foods/edit";
-  }
-  @PostMapping("/edit/{id}")
-  public String editFood(@PathVariable Long id, @ModelAttribute Food food){
-    foodService.updateFood(food);
-    return "redirect:/foods/list";
-  }
+
 
 }

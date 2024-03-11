@@ -5,6 +5,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import antojos.ecommerce.products.drink.Drink;
+import antojos.ecommerce.products.drink.DrinkService;
+import antojos.ecommerce.products.food.Food;
+import antojos.ecommerce.products.food.FoodService;
 import jakarta.servlet.http.HttpSession;
 import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
@@ -18,9 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping({"/","/products"})
 public class ProductController {
   private ProductService productService;
+  private FoodService foodService;
+  private DrinkService drinkService;
 
-  public ProductController(ProductService productService) {
+  public ProductController(ProductService productService, FoodService foodService, DrinkService drinkService) {
     this.productService = productService;
+    this.foodService = foodService;
+    this.drinkService = drinkService;
   }
 
 
@@ -119,6 +127,16 @@ public class ProductController {
     filterProducts(filterFood, filter, model);
 
     return "/products/index";
+  }
+
+  @GetMapping("/prodsList")
+  public String productList(Model model){
+    Map<String, List<Product>> productsByType = productService.getProducts("");
+
+    model.addAttribute("foods", productsByType.getOrDefault("food", new ArrayList<>()));
+    model.addAttribute("drinks", productsByType.getOrDefault("drink", new ArrayList<>()));
+
+    return "/products/prodlist";
   }
 
 

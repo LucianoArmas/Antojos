@@ -5,14 +5,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import antojos.ecommerce.products.drink.Drink;
+import antojos.ecommerce.products.drink.DrinkRepository;
+import antojos.ecommerce.products.food.Food;
+import antojos.ecommerce.products.food.FoodRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
   private final ProductRepository productRepository;
+  private final FoodRepository foodRepository;
+  private final DrinkRepository drinkRepository;
 
-  public ProductService(ProductRepository productRepository) {
+  public ProductService(ProductRepository productRepository, DrinkRepository drinkRepository, FoodRepository foodRepository) {
     this.productRepository = productRepository;
+    this.drinkRepository = drinkRepository;
+    this.foodRepository = foodRepository;
   }
 
   public Map<String, List<Product>> getProducts(String name){
@@ -32,6 +40,15 @@ public class ProductService {
 
     return prodByType;
   }
+
+  public List<Food> getFoods(){
+    return foodRepository.findAll();
+  }
+
+  public List<Drink> getDrinks(){
+    return drinkRepository.findAll();
+  }
+
 
   public Product getProductById(Long id){
     return productRepository.findById(id).orElse(null);

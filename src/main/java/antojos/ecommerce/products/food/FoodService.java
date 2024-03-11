@@ -35,6 +35,7 @@ public class FoodService {
       updatedFood.setDescription(food.getDescription());
       updatedFood.setPrice(food.getPrice());
       updatedFood.setAmountPeopleEat(food.getAmountPeopleEat());
+      updatedFood.setStock(food.getStock());
 
       foodRepository.save(updatedFood);
     }

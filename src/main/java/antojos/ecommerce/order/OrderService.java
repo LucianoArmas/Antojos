@@ -32,6 +32,8 @@ public class OrderService {
   public List<Order> getAllOrders(){
     return orderRepository.findAll();
   }
+
+  public List<Order> getAllByState(String state){return orderRepository.findByState(state);}
   
 
   public List<Order> getByDate(Date dateFrom, Date dateTo){
@@ -56,7 +58,7 @@ public class OrderService {
   }
 
 
-  public void updateShopping(Order order){
+  public void updateOrder(Order order, String status){
     Long cod = order.getCod();
     Optional<Order> existingShop = orderRepository.findById(cod);
     if(existingShop.isPresent()){
@@ -66,7 +68,7 @@ public class OrderService {
       updatedShop.setUser(order.getUser());
       updatedShop.setOrderLineList(order.getOrderLineList());
       updatedShop.setTotPrice(order.calcuTotal());
-      //MODIFICAR
+      updatedShop.setState(status);
 
       orderRepository.save(updatedShop);
     }

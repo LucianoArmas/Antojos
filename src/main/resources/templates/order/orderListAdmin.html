@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{template.html :: head}"></head>
+
+<body>
+<header th:replace="~{template.html :: header}"></header>
+<div th:replace="~{template.html :: sideMenu}"></div>
+
+<table class="table table-dark table-striped">
+    <thead>
+    <tr>
+        <th scope="col" style="text-align: center">Code</th>
+        <th scope="col" style="text-align: center">User DNI</th>
+        <th scope="col" style="text-align: center">Date</th>
+        <th scope="col" style="text-align: center">Total Price</th>
+        <th scope="col" style="text-align: center"></th>
+        <th scope="col" style="text-align: center"></th>
+        <th scope="col" style="text-align: center">State</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="orderAccepted : ${orderListAccepted}">
+        <td th:text="${orderAccepted.getCod()}"></td>
+        <td th:text="${orderAccepted.getUser().dni}"></td>
+        <td th:text="${orderAccepted.getDate()}"></td>
+        <td th:text="${orderAccepted.getTotPrice()}"></td>
+        <td style="text-align: center;">
+            <div class="btn-group dropend">
+                <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Products
+                </button>
+                <ul class="dropdown-menu" style="width: max-content; padding-inline: 10px;">
+                    <li th:each="ol : ${orderAccepted.getOrderLineList()}">
+                        <p th:text=" ${ol.getQuantityProds()}+'x - '+${ol.getProduct().getName()}+' - $'+${ol.getProduct().getPrice()}"></p>
+                    </li>
+                </ul>
+            </div>
+        </td>
+        <td>
+            <div class="modal fade" th:id="'modStateFormModal'+${orderAccepted.getCod()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-bg: #343a40;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modifying the order status</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <b th:text="'User DNI: '+${orderAccepted.getUser().dni}"></b><br>
+                            <b th:text="'Date: '+${orderAccepted.getDate()}"></b><br>
+                            <ul>
+                                <li th:each="ol : ${orderAccepted.getOrderLineList()}">
+                                    <p th:text=" ${ol.getQuantityProds()}+'x - '+${ol.getProduct().getName()}+' - $'+${ol.getProduct().getPrice()}"></p>
+                                </li>
+                            </ul> <br>
+                            <b th:text="'Total: '+${orderAccepted.getTotPrice()}"></b>
+                        </div>
+                        <div class="modal-footer" style="display: grid; justify-content: center;">
+                            <form th:action="@{/orders/modStatusAdmin}" method="POST" id="formCancelOrder">
+                                <label for="editOrderStatus">Order Status</label>
+                                <select class="form-select form-select-sm" aria-label="Small select example" id="editOrderStatus" name="orderStatus">
+                                    <option selected hidden th:text="${orderAccepted.getState()}"></option>
+                                    <option value="delivered">Delivered</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                                <input type="hidden" name="cod" th:value="${orderAccepted.getCod()}">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-outline-success">Save Changes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button title="Edit Order Status" type="button" class="btn btn-outline-warning" data-bs-toggle="modal" th:data-bs-target="'#modStateFormModal'+${orderAccepted.getCod()}" >
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                    <path d="M16 5l3 3" />
+                </svg>
+            </button>
+        </td>
+        <td th:text="${orderAccepted.getState()}" style="text-align: center;"></td>
+
+    </tr>
+
+    <tr th:each="orderDelivered : ${orderListDelivered}" class="table-success">
+        <td th:text="${orderDelivered.getCod()}"></td>
+        <td th:text="${orderDelivered.getUser().dni}"></td>
+        <td th:text="${orderDelivered.getDate()}"></td>
+        <td th:text="${orderDelivered.getTotPrice()}"></td>
+        <td style="text-align: center;">
+            <div class="btn-group dropend">
+                <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Products
+                </button>
+                <ul class="dropdown-menu" style="width: max-content; padding-inline: 10px;">
+                    <li th:each="ol : ${orderDelivered.getOrderLineList()}">
+                        <p th:text=" ${ol.getQuantityProds()}+'x - '+${ol.getProduct().getName()}+' - $'+${ol.getProduct().getPrice()}"></p>
+                    </li>
+                </ul>
+            </div>
+        </td>
+        <td></td>
+        <td th:text="${orderDelivered.getState()}" style="text-align: center;"></td>
+    </tr>
+
+    <tr th:each="orderCancelled : ${orderListCancelled}" class="table-danger">
+        <td th:text="${orderCancelled.getCod()}"></td>
+        <td th:text="${orderCancelled.getUser().dni}"></td>
+        <td th:text="${orderCancelled.getDate()}"></td>
+        <td th:text="${orderCancelled.getTotPrice()}"></td>
+        <td style="text-align: center;">
+            <div class="btn-group dropend">
+                <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Products
+                </button>
+                <ul class="dropdown-menu" style="width: max-content; padding-inline: 10px;">
+                    <li th:each="ol : ${orderCancelled.getOrderLineList()}">
+                        <p th:text=" ${ol.getQuantityProds()}+'x - '+${ol.getProduct().getName()}+' - $'+${ol.getProduct().getPrice()}"></p>
+                    </li>
+                </ul>
+            </div>
+        </td>
+        <td></td>
+        <td th:text="${orderCancelled.getState()}" style="text-align: center;"></td>
+    </tr>
+
+
+    </tbody>
+</table>
+
+
+
+<footer th:replace="~{template.html :: footer}"></footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+</body>
+</html>
