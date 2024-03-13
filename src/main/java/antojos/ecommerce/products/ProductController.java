@@ -1,9 +1,9 @@
 package antojos.ecommerce.products;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 import antojos.ecommerce.products.drink.Drink;
 import antojos.ecommerce.products.drink.DrinkService;
@@ -13,10 +13,9 @@ import jakarta.servlet.http.HttpSession;
 import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping({"/","/products"})
@@ -133,10 +132,60 @@ public class ProductController {
   public String productList(Model model){
     Map<String, List<Product>> productsByType = productService.getProducts("");
 
+    model.addAttribute("product", new Product());
     model.addAttribute("foods", productsByType.getOrDefault("food", new ArrayList<>()));
     model.addAttribute("drinks", productsByType.getOrDefault("drink", new ArrayList<>()));
 
     return "/products/prodlist";
+  }
+
+
+
+  private void saveImage(String prodName, MultipartFile img){
+    String fileName = prodName+".png";
+    try{
+      Files.write(Paths.get("src/main/resources/static/imgs/"+fileName), img.getBytes());
+    }catch (IOException e){
+      e.printStackTrace();
+    }
+  }
+
+
+  @PostMapping("/newProd")
+  //, @RequestParam("imageProd") MultipartFile img
+  public String createNewProd(@ModelAttribute("product") Product product, Model model, HttpSession session, @RequestParam("lts") float lts, @RequestParam("amountPeople") int amountPeople, @RequestParam("editType") String type){
+    boolean flag_prodExist = productService.verifyProdByName(product.getName());
+
+
+    if (!flag_prodExist){
+      if (Objects.equals(type, "food")){
+        Food food = new Food();
+        food.setAmountPeopleEat(amountPeople);
+        food.setStock(product.getStock());
+        food.setName(product.getName());
+        food.setDescription(product.getDescription());
+        food.setPrice(product.getPrice());
+
+        foodService.addFood(food);
+
+      }else if(Objects.equals(type, "drink")){
+        Drink drink = new Drink();
+        drink.setMililts(lts);
+        drink.setStock(product.getStock());
+        drink.setName(product.getName());
+        drink.setDescription(product.getDescription());
+        drink.setPrice(product.getPrice());
+
+        drinkService.addDrink(drink);
+
+      }
+//      saveImage(product.getName(), img);
+    }else {
+      session.setAttribute("prodExist_error", "The product: " + product.getName() + " already exists ");
+      System.out.println(session.getAttribute("prodExist_error"));
+    }
+
+    return "redirect:/products/prodsList";
   }
 
 

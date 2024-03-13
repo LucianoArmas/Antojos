@@ -1,13 +1,11 @@
 package antojos.ecommerce.products;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import antojos.ecommerce.products.drink.Drink;
 import antojos.ecommerce.products.drink.DrinkRepository;
 import antojos.ecommerce.products.food.Food;
+import antojos.ecommerce.products.Product;
 import antojos.ecommerce.products.food.FoodRepository;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +39,15 @@ public class ProductService {
     return prodByType;
   }
 
+  public boolean verifyProdByName(String name){
+    List<Product> product = productRepository.findByNameContainingIgnoreCase(name);
+    if (product != null){
+      return true;
+    }else {
+      return false;
+    }
+  }
+
   public List<Food> getFoods(){
     return foodRepository.findAll();
   }
@@ -55,9 +62,7 @@ public class ProductService {
   }
 
 
-  public void addProduct(Product product){
-    productRepository.save(product);
-  }
+
 
   public void updateProduct(Product product){
     //AGREGAR MODIFICACIONES DE LOS ATRIBUTOS

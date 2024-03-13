@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:autohide="http://www.w3.org/1999/xhtml">
 <head th:replace="~{template.html :: head}"></head>
 <body>
     <header th:replace="~{template.html :: header}"></header>
@@ -7,8 +7,101 @@
     <div th:replace="~{template.html :: sideMenu}"></div>
 
     <h1>PRODUCTS</h1>
-<!--    style="display: grid; justify-content: center;" style de prodContainer-->
+
+<!--    <div th:replace="~{addNewProductForm.html :: modalNewProd}"></div>-->
+
+    <div class="modal fade" th:id="'newProdModal'" tabindex="-1" aria-labelledby="exampleModal" aria-hidden="true" style="--bs-modal-bg: #343a40;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModal">Create new Product</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/products/newProd}" method="post" th:object="${product}" class="newProd-form forms" id="formNewProd" style="display: grid;">
+
+                        <label for="editName" style="margin-top: 1rem;">Name</label>
+                        <input type="text"  th:field="*{name}" name="name" id="editName"/>
+
+                        <label for="editDesc" style="margin-top: 1rem;">Description</label>
+                        <input type="text" th:field="*{description}" name="desc" id="editDesc"/>
+
+                        <label for="editPrice" style="margin-top: 1rem;">Price</label>
+                        <input type="number" th:field="*{price}" step="any" name="price" id="editPrice"/>
+
+                        <label for="editStock" style="margin-top: 1rem;">Stock</label>
+                        <input type="number" th:field="*{stock}" name="stock" id="editStock"/>
+
+                        <label for="editType" style="margin-top: 1rem;">Type</label>
+                        <select class="form-select form-select-sm" aria-label="Small select example" name="editType" id="editType">
+                            <option selected hidden th:text="'Select Type'" value=""></option>
+                            <option value="drink">Drink</option>
+                            <option value="food">Food</option>
+                        </select>
+
+
+                        <div id="foodInput" >
+                            <label for="editAmountPeople" style="margin-top: 1rem;">Amount of people can eat</label>
+                            <input type="number" name="amountPeople" id="editAmountPeople" th:value="0"/>
+                        </div>
+
+                        <div id="drinkInput" >
+                            <label for="editMililts" style="margin-top: 1rem;">Amount of liters</label>
+                            <input type="number" name="lts" id="editMililts" step="any" th:value="0"/>
+                        </div>
+
+<!--                        <label for="imageProd" style="margin-top: 1rem;">Image of product</label>-->
+<!--                        <input type="file" name="imageProd" id="imageProd" accept=".png">-->
+
+
+                        <div class="buttons--form" style="display: flex; justify-content: space-around; margin-bottom: 4rem; margin-top: 3rem;">
+                            <button class="btn btn-outline-secondary btnCancel" type="reset">Reset</button>
+                            <button class="btn btn-outline-success btnSave" type="submit">Save Product</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <button title="Edit Food" type="button" class="btn btn-outline-warning" data-bs-toggle="modal" th:data-bs-target="'#newProdModal'">
+        Create new Product
+        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-plus">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+            <path d="M9 12h6" />
+            <path d="M12 9v6" />
+        </svg>
+    </button>
+
+
+
+
+
+    <div th:if="${session.prodExist_error != null}" class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" id="errorNewProd">
+        <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" style="background: #EF3B3A">
+            <div class="toast-header">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <b th:text="${session.prodExist_error}"></b>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
     <div class="prodContainer" >
+        <div></div>
         <table class="table table-dark table-striped">
                 <thead>
                 <tr>
@@ -153,5 +246,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/inputTypeForm.js}"></script>
+
 </body>
 </html>
