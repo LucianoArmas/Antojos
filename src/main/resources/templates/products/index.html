@@ -9,7 +9,12 @@
 
 <div class="mainContainer" th:if="${session.user}">
     <div class="adminContainer" th:if="${session.user.getAccessLvl() == 'admin'}">
-        <p> WELCOME ADMIN <b th:text="${session.user.name}"></b></p>
+        <p style="text-align: center; margin-top: 1rem;"> WELCOME ADMIN <b th:text="${session.user.name}"></b></p>
+        <div id="btnsAdmin" style="display: flex; justify-content: space-evenly; margin-top: 3rem;">
+            <a class="btn btn-light" href="/users/list">Users</a>
+            <a class="btn btn-light" href="/products/prodsList">Products</a>
+            <a class="btn btn-light" href="/orders/orderListAdmin">Orders</a>
+        </div>
     </div>
 </div>
 

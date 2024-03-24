@@ -10,10 +10,8 @@ import org.springframework.stereotype.Service;
 
 import antojos.ecommerce.user.User;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -33,12 +31,9 @@ public class OrderService {
     return orderRepository.findAll();
   }
 
+  //MEPA Q LO TENDRIA Q ELIMINAR
   public List<Order> getAllByState(String state){return orderRepository.findByState(state);}
-  
 
-  public List<Order> getByDate(Date dateFrom, Date dateTo){
-    return orderRepository.findByDateBetween(dateFrom, dateTo);
-  }
   public List<Order> getByUser(User user){
     return orderRepository.findByUser(user);
   }
@@ -46,8 +41,15 @@ public class OrderService {
   public Order getByUserAndState(User user, String state){return orderRepository.findByUserAndState(user, state);}
   public List<Order> getOrdersByUserAndState(User user, String state){return orderRepository.findOrdersByUserAndState(user,state);}
   public List<Order> getByUserAndDate(User user, Date dateFrom, Date dateTo){
-    return orderRepository.findByUserAndDateBetween(user, dateTo, dateTo);
+    return orderRepository.findByUserAndDateBetween(user, dateFrom, dateTo);
   }
+
+  public Map<String, List<Order>> divideOrdersByStatus(List<Order> orderList){
+    return orderList.stream().collect(Collectors.groupingBy(Order::getState));
+  }
+
+  public List<Order> getOrdersBetweenDates(Date dateFrom, Date dateTo){return orderRepository.findByDateBetween(dateFrom, dateTo);}
+
   public Order getOrderByCod(Long cod){
     return orderRepository.findById(cod).orElse(null);
   }

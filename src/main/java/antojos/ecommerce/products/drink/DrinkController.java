@@ -1,5 +1,8 @@
 package antojos.ecommerce.products.drink;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import antojos.ecommerce.products.food.Food;
@@ -30,6 +33,32 @@ public class DrinkController {
     drinkService.updateDrink(drink);
     return "redirect:/products/prodsList";
   }
+
+
+
+  private void deleteImgDrink(Long id){
+    Drink drink = drinkService.getDrinkById(id);
+
+    if(drink != null){
+      String path = "src/main/resources/static/imgs/"+drink.getName()+".png";
+      try {
+        Files.deleteIfExists(Paths.get(path));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
+  @PostMapping("delete")
+  public String deleteDrink(@RequestParam("id") Long id){
+    drinkService.deleteDrink(id);
+    deleteImgDrink(id);
+    return "redirect:/products/prodsList";
+  }
+
+
+
 
 
 

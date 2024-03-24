@@ -48,8 +48,8 @@
     </tbody>
 </table>
 
-<form th:action="@{/orders/acceptOrder/{orderCod}(orderCod=${session.orderPending.getCod()})}" method="post">
-    <button class="btn btn-outline-success" type="submit">Accept Order</button>
+<form th:if="${session.orderPending.getTotPrice()>0}" th:action="@{/orders/acceptOrder/{orderCod}(orderCod=${session.orderPending.getCod()})}" method="post" style="display: flex; flex-direction: row-reverse;">
+    <button class="btn btn-outline-success" type="submit" style="margin-right: 2rem;">Accept Order</button>
 </form>
 
 

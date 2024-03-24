@@ -41,5 +41,10 @@ public class FoodService {
     }
     //MANEJAR EL CASO DONDE EL OBJ NO EXISTE
   }
+
+
+  public void deleteFood(Long id){
+    foodRepository.deleteById(id);
+  }
   
 }

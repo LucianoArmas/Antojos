@@ -6,6 +6,38 @@
     <div th:replace="~{template.html :: sideMenu}"></div>
 
     <h1>USERS</h1>
+    <div style="display: flex; justify-content: center; margin-bottom: 1rem">
+        <form class=" d-flex" role="search" style="width: 40rem;" th:action="@{/users/searchAdmin}">
+            <input name="query" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-primary d-grid align-content-center" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+
+
+    <div class="modal fade show" tabindex="-1" th:if="${(users == null)}" style="display: block; --bs-modal-bg: #c1121f;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Error</h5>
+                </div>
+                <div class="modal-body">
+                    <b th:text="${userNotFounded}"></b>
+                </div>
+                <div class="modal-footer">
+                    <!--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+                    <form th:action="@{/users/list}" method="get">
+
+                        <button type="submit" class="btn btn-outline-primary">Ok</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <table class="table table-dark table-striped" style="text-align: center;">
         <thead>
         <tr>
@@ -14,6 +46,7 @@
             <th scope="col">LAST NAME</th>
             <th scope="col">EMAIL</th>
             <th scope="col">ACCESS LVL</th>
+            <th scope="col"></th>
             <th scope="col"></th>
         </tr>
         </thead>
@@ -79,6 +112,45 @@
                             <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
                             <path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" />
                             <path d="M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39z" />
+                        </svg>
+                    </button>
+                </td>
+
+                <td>
+                    <div class="modal fade" th:id="'deleteFood'+${user.dni}" tabindex="-1" aria-labelledby="deleteUserModal" aria-hidden="true" style="--bs-modal-bg: #343a40;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="deleteUserModal">Are oyu sure to delete this User?</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul>
+                                        <li><b th:text="'DNI: '+${user.dni}"></b></li>
+                                        <li><b th:text="'Name: '+${user.name}"></b></li>
+                                        <li><b th:text="'Lastname: '+${user.lastName}"></b></li>
+                                        <li><b th:text="'Email: '+${user.email}"></b></li>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
+                                    <form th:action="@{/users/delete}" method="POST" id="formDeleteUser">
+                                        <input th:value="${user.dni}" type="hidden" name="dni">
+                                        <button type="submit" class="btn btn-outline-success">Yes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button title="Delete Food" type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteFood'+${user.dni}" >
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M4 7l16 0" />
+                            <path d="M10 11l0 6" />
+                            <path d="M14 11l0 6" />
+                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                         </svg>
                     </button>
                 </td>

@@ -23,12 +23,28 @@ public class UserController {
   public String listUsers(Model model, HttpSession session){
     User userInSession = (User) session.getAttribute("user");
     if (Objects.equals(userInSession.getAccessLvl(), "admin")){
-      List<User> users = userService.getAllUsers();
+      List<User> users = userService.getAllUsersExceptAdmin(userInSession.getDni());
       model.addAttribute("users", users);
       return "/users/userlist";
     }
     return "redirect:/";
   }
+
+
+  @GetMapping("/searchAdmin")
+  public String searchUser_Admin(@RequestParam("query") String query, Model model, HttpSession session){
+    User userInSession = (User) session.getAttribute("user");
+    List<User> userList = userService.findByDniOrName(query, userInSession.getDni());
+
+    if(!userList.isEmpty()){
+      model.addAttribute("users", userList);
+    }else {
+      model.addAttribute("userNotFounded", "The user: " + query + " not exists");
+    }
+
+    return "/users/userlist";
+  }
+
 
 
   @GetMapping("/add")
@@ -101,8 +117,8 @@ public class UserController {
   }
 
 
-  @GetMapping("/delete/{dni}")
-  public String deleteUser(@PathVariable String dni){
+  @PostMapping("/delete")
+  public String deleteFood(@RequestParam("dni") String dni){
     userService.deleteUser(dni);
     return "redirect:/users/list";
   }

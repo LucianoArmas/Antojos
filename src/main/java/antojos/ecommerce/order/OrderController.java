@@ -1,15 +1,22 @@
 package antojos.ecommerce.order;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import antojos.ecommerce.orderLine.OrderLine;
 import antojos.ecommerce.products.Product;
 import antojos.ecommerce.products.ProductService;
 import antojos.ecommerce.user.User;
+import antojos.ecommerce.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.swing.text.DateFormatter;
 
 
 @Controller
@@ -19,9 +26,12 @@ public class OrderController {
 
   private ProductService productService;
 
-  public OrderController(OrderService orderService, ProductService productService) {
+  private UserService userService;
+
+  public OrderController(OrderService orderService, ProductService productService, UserService userService) {
     this.orderService = orderService;
     this.productService = productService;
+    this.userService = userService;
   }
 
   @GetMapping("/cart")
@@ -111,11 +121,16 @@ public String getOrdersAccepted(Model model, HttpSession session){
   return "ordersAccepted(ELIMINAR-QUIZAS)";
 }
 
+private Map<String, List<Order>> getOrdersMap(List<Order> orderList){
+    return orderService.divideOrdersByStatus(orderList);
+}
+
 
 @GetMapping("orderList")
 public String getOrderList(Model model, HttpSession session){
 
 User user = (User) session.getAttribute("user");
+
 List<Order> orderListAccepted = orderService.getOrdersByUserAndState(user, "accepted");
 List<Order> orderListCancelled = orderService.getOrdersByUserAndState(user, "cancelled");
 List<Order> orderListDelivered = orderService.getOrdersByUserAndState(user, "delivered");
@@ -131,16 +146,78 @@ return "/order/orderList";
 
 @GetMapping("/orderListAdmin")
 public String getOrderListAdmin(Model model){
-    List<Order> orderListAccepted = orderService.getAllByState("accepted");
-    List<Order> orderListCancelled = orderService.getAllByState("cancelled");
-    List<Order> orderListDelivered = orderService.getAllByState("delivered");
 
-    model.addAttribute("orderListAccepted", orderListAccepted);
-    model.addAttribute("orderListCancelled", orderListCancelled);
-    model.addAttribute("orderListDelivered", orderListDelivered);
+  List<Order> orderList = orderService.getAllOrders();
+  Map<String, List<Order>> ordersMap = getOrdersMap(orderList);
 
-    return "/order/orderListAdmin";
+  List<Order> ordersAccepted =  ordersMap.get("accepted");
+  List<Order> ordersCancelled = ordersMap.get("cancelled");
+  List<Order> ordersDelivered = ordersMap.get("delivered");
+
+
+
+  model.addAttribute("orderListAccepted", ordersAccepted);
+  model.addAttribute("orderListCancelled", ordersCancelled);
+  model.addAttribute("orderListDelivered", ordersDelivered);
+
+  return "/order/orderListAdmin";
 }
+
+
+
+private Date formatter(String stringToDate){
+  DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+  LocalDate date = LocalDate.parse(stringToDate, dateFormatter);
+  return java.sql.Date.valueOf(date);
+}
+
+@GetMapping("/search")
+public String searchOrder(HttpSession session,Model model, @RequestParam("userDni") String userDni, @RequestParam("dateFrom") String dateFrom, @RequestParam("dateTo") String dateTo){
+  User user = null;
+  List<Order> orderList = null;
+  Date orderDateFrom;
+  Date orderDateTo;
+
+  if (dateFrom.isBlank()){
+    orderDateFrom = formatter("2000-01-01");
+  }else {
+    orderDateFrom = formatter(dateFrom);
+  }
+
+
+  if (dateTo.isBlank()){
+    LocalDate today = (LocalDate.now());
+    orderDateTo = java.sql.Date.valueOf(today);
+  }else {
+    orderDateTo = formatter(dateTo);
+  }
+
+
+  if (userDni.isBlank()){
+    orderList = orderService.getOrdersBetweenDates(orderDateFrom, orderDateTo);
+  }else{
+    user = userService.getUserByDni(userDni);
+    orderList = orderService.getByUserAndDate(user, orderDateFrom, orderDateTo);
+  }
+
+  Map<String, List<Order>> ordersMap = orderService.divideOrdersByStatus(orderList);
+
+  List<Order> ordersAccepted = ordersMap.get("accepted");
+  List<Order> ordersCancelled = ordersMap.get("cancelled");
+  List<Order> ordersDelivered = ordersMap.get("delivered");
+
+
+
+  model.addAttribute("orderListAccepted", ordersAccepted);
+  model.addAttribute("orderListCancelled", ordersCancelled);
+  model.addAttribute("orderListDelivered", ordersDelivered);
+
+  return "/order/orderListAdmin";
+}
+
+
+
+
 
 
 @PostMapping("/modStatusAdmin")

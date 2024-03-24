@@ -40,8 +40,9 @@ public class ProductService {
   }
 
   public boolean verifyProdByName(String name){
-    List<Product> product = productRepository.findByNameContainingIgnoreCase(name);
-    if (product != null){
+    List<Product> products = productRepository.findByNameContainingIgnoreCase(name);
+
+    if (!(products.isEmpty())){
       return true;
     }else {
       return false;

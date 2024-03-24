@@ -43,4 +43,9 @@ public class DrinkService {
   }
 
 
+  public void deleteDrink(Long id){
+    drinkRepository.deleteById(id);
+  }
+
+
 }

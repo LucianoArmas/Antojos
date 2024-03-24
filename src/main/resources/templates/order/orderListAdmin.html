@@ -6,6 +6,25 @@
 <header th:replace="~{template.html :: header}"></header>
 <div th:replace="~{template.html :: sideMenu}"></div>
 
+<div style="display: flex; justify-content: center; margin: 1rem;">
+    <form role="search" style="display: flex; align-items: center;"  th:action="@{/orders/search}" >
+        <input style="width: max-content;" name="userDni" class="form-control me-2 col-1" type="search" placeholder="Search by User DNI" aria-label="Search">
+
+        <label for="dateFrom" style="margin-left:0.5rem;">Date From:</label>
+        <input type="date" name="dateFrom" id="dateFrom" class="col-2" style="width: max-content;">
+
+        <label for="dateTo" style="margin-left:1rem;">Date To:</label>
+        <input type="date" name="dateTo" id="dateTo" class="col-2" style="width: max-content;">
+
+        <button class="btn btn-primary d-grid align-content-center col-last" type="submit" style="margin-left:0.5rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg>
+        </button>
+    </form>
+</div>
+
+
 <table class="table table-dark table-striped">
     <thead>
     <tr>
@@ -19,7 +38,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="orderAccepted : ${orderListAccepted}">
+    <tr th:each="orderAccepted : ${orderListAccepted}"  style="text-align: center;">
         <td th:text="${orderAccepted.getCod()}"></td>
         <td th:text="${orderAccepted.getUser().dni}"></td>
         <td th:text="${orderAccepted.getDate()}"></td>
@@ -84,7 +103,7 @@
 
     </tr>
 
-    <tr th:each="orderDelivered : ${orderListDelivered}" class="table-success">
+    <tr th:each="orderDelivered : ${orderListDelivered}" class="table-success"  style="text-align: center;">
         <td th:text="${orderDelivered.getCod()}"></td>
         <td th:text="${orderDelivered.getUser().dni}"></td>
         <td th:text="${orderDelivered.getDate()}"></td>
@@ -105,7 +124,7 @@
         <td th:text="${orderDelivered.getState()}" style="text-align: center;"></td>
     </tr>
 
-    <tr th:each="orderCancelled : ${orderListCancelled}" class="table-danger">
+    <tr th:each="orderCancelled : ${orderListCancelled}" class="table-danger"  style="text-align: center;">
         <td th:text="${orderCancelled.getCod()}"></td>
         <td th:text="${orderCancelled.getUser().dni}"></td>
         <td th:text="${orderCancelled.getDate()}"></td>

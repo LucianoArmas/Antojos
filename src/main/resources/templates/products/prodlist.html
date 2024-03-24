@@ -8,6 +8,22 @@
 
     <h1>PRODUCTS</h1>
 
+
+    <div style="display: flex; justify-content: center;">
+        <form class=" d-flex" role="search" style="width: 40rem;" th:action="@{/products/searchAdmin}">
+            <input name="query" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-primary d-grid align-content-center" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+
+
+
+
+
 <!--    <div th:replace="~{addNewProductForm.html :: modalNewProd}"></div>-->
 
     <div class="modal fade" th:id="'newProdModal'" tabindex="-1" aria-labelledby="exampleModal" aria-hidden="true" style="--bs-modal-bg: #343a40;">
@@ -18,7 +34,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="@{/products/newProd}" method="post" th:object="${product}" class="newProd-form forms" id="formNewProd" style="display: grid;">
+                    <form th:action="@{/products/newProd}" method="post" th:object="${product}" class="newProd-form forms" id="formNewProd" style="display: grid;" enctype="multipart/form-data">
 
                         <label for="editName" style="margin-top: 1rem;">Name</label>
                         <input type="text"  th:field="*{name}" name="name" id="editName"/>
@@ -50,8 +66,8 @@
                             <input type="number" name="lts" id="editMililts" step="any" th:value="0"/>
                         </div>
 
-<!--                        <label for="imageProd" style="margin-top: 1rem;">Image of product</label>-->
-<!--                        <input type="file" name="imageProd" id="imageProd" accept=".png">-->
+                        <label for="imageProd" style="margin-top: 1rem;">Image of product</label>
+                        <input type="file" name="imageProd" id="imageProd" accept=".png">
 
 
                         <div class="buttons--form" style="display: flex; justify-content: space-around; margin-bottom: 4rem; margin-top: 3rem;">
@@ -67,7 +83,7 @@
     </div>
 
 
-    <button title="Edit Food" type="button" class="btn btn-outline-warning" data-bs-toggle="modal" th:data-bs-target="'#newProdModal'">
+    <button title="Edit Food" type="button" class="btn btn-outline-warning" data-bs-toggle="modal" th:data-bs-target="'#newProdModal'" style="margin-block: 1rem; margin-inline: 1rem;">
         Create new Product
         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-circle-plus">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -81,17 +97,40 @@
 
 
 
-    <div th:if="${session.prodExist_error != null}" class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" id="errorNewProd">
-        <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" style="background: #EF3B3A">
-            <div class="toast-header">
-                <strong class="me-auto">Error</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                <b th:text="${session.prodExist_error}"></b>
+    <div class="modal fade show" tabindex="-1" th:if="${(session.prodExist_error != null)}" style="display: block; --bs-modal-bg: #c1121f;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Error</h5>
+                </div>
+                <div class="modal-body">
+                    <b th:text="${session.prodExist_error}"></b>
+                </div>
+                <div class="modal-footer">
+<!--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+                    <form th:action="@{/products/resetErrorNewProd}" method="post">
+
+                        <button type="submit" class="btn btn-outline-primary">Ok</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
+
+
+
+<!--    <div th:if="${(session.prodExist_error != null)}" class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" id="errorNewProd">-->
+<!--        <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" style="background: #EF3B3A">-->
+<!--            <div class="toast-header">-->
+<!--                <strong class="me-auto">Error</strong>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>-->
+<!--            </div>-->
+<!--            <div class="toast-body">-->
+<!--                <b th:text="${session.prodExist_error}"></b>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
 
 
@@ -104,7 +143,7 @@
         <div></div>
         <table class="table table-dark table-striped">
                 <thead>
-                <tr>
+                <tr  style="text-align: center;">
                     <th scope="col"></th>
                     <th scope="col">ID</th>
                     <th scope="col">Name</th>
@@ -113,17 +152,21 @@
                     <th scope="col">Stock</th>
                     <th scope="col">Extra Info</th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="food : ${foods}">
+                <tr th:if="${foods.isEmpty()}">
+                    <td><b>There are no foods</b></td>
+                </tr>
+                <tr th:each="food : ${foods}" style="text-align: center;">
                     <td><img th:src="@{'/imgs/'+${food.name}+'.png'}" th:alt="${food.name}" style="height: fit-content; max-width: 9rem; max-height: 18rem; align-self: center; justify-self: center;"></td>
                     <td th:text="${food.id}"></td>
                     <td th:text="${food.name}"></td>
                     <td th:text="${food.description}"></td>
                     <td th:text="${food.price}"></td>
                     <td th:text="${food.stock}"></td>
-                    <td th:text="${food.amountPeopleEat}"></td>
+                    <td th:text=" 'For '+${food.amountPeopleEat} + ' people'"></td>
                     <td>
                         <div class="modal fade" th:id="'editFoodModal'+${food.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-bg: #343a40;">
                             <div class="modal-dialog">
@@ -175,15 +218,61 @@
                             </svg>
                         </button>
                     </td>
+
+                    <td>
+                        <div class="modal fade" th:id="'deleteFood'+${food.id}" tabindex="-1" aria-labelledby="deleteFoodModal" aria-hidden="true" style="--bs-modal-bg: #343a40;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="deleteFoodModal">Are you sure to delete this Food?</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul>
+                                            <li><b th:text="'Name: '+${food.name}"></b></li>
+                                            <li><b th:text="'ID: '+${food.id}"></b></li>
+                                            <li><p th:text="'Desc: '+${food.description}"></p></li>
+                                            <li><p th:text="'Price: '+${food.price}"></p></li>
+                                            <li><p th:text="'Stock: '+${food.stock}"></p></li>
+                                            <li><p th:text="'Amount of people can eat: '+${food.amountPeopleEat}"></p></li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
+                                        <form th:action="@{/foods/delete}" method="POST" id="formDeleteFood">
+                                            <input th:value="${food.id}" type="hidden" name="id">
+                                            <button type="submit" class="btn btn-outline-success">Yes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button title="Delete Food" type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteFood'+${food.id}" >
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M4 7l16 0" />
+                                <path d="M10 11l0 6" />
+                                <path d="M14 11l0 6" />
+                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                            </svg>
+                        </button>
+                    </td>
                 </tr>
-                <tr th:each="drink : ${drinks}">
+
+
+                <tr th:if="${drinks.isEmpty()}">
+                    <td><b>There are no drinks</b></td>
+                </tr>
+                <tr th:each="drink : ${drinks}" style="text-align: center;">
                     <td><img th:src="@{'/imgs/'+${drink.name}+'.png'}" th:alt="${drink.name}" style="height: fit-content; max-width: 9rem; max-height: 18rem; align-self: center; justify-self: center;"></td>
                     <td th:text="${drink.id}"></td>
                     <td th:text="${drink.name}"></td>
                     <td th:text="${drink.description}"></td>
                     <td th:text="${drink.price}"></td>
                     <td th:text="${drink.stock}"></td>
-                    <td th:text="${drink.mililts}"></td>
+                    <td th:text="${drink.mililts}+' lts'"></td>
                     <td>
                         <div class="modal fade" th:id="'editDrinkModal'+${drink.id}" tabindex="-1" aria-labelledby="exampleLabel" aria-hidden="true" style="--bs-modal-bg: #343a40;">
                             <div class="modal-dialog">
@@ -226,12 +315,53 @@
                         </div>
 
 
-                        <button title="Edit User" type="button" class="btn btn-outline-warning" data-bs-toggle="modal" th:data-bs-target="'#editDrinkModal'+${drink.id}">
+                        <button title="Edit Drink" type="button" class="btn btn-outline-warning" data-bs-toggle="modal" th:data-bs-target="'#editDrinkModal'+${drink.id}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                 <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
                                 <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
                                 <path d="M16 5l3 3" />
+                            </svg>
+                        </button>
+                    </td>
+
+                    <td>
+                        <div class="modal fade" th:id="'deleteDrink'+${drink.id}" tabindex="-1" aria-labelledby="deleteDrinkModal" aria-hidden="true" style="--bs-modal-bg: #343a40;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="deleteDrinkModal">Are you sure to delete this Drink?</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul>
+                                            <li><b th:text="'Name: '+${drink.name}"></b></li>
+                                            <li><b th:text="'ID: '+${drink.id}"></b></li>
+                                            <li><p th:text="'Desc: '+${drink.description}"></p></li>
+                                            <li><p th:text="'Price: '+${drink.price}"></p></li>
+                                            <li><p th:text="'Stock: '+${drink.stock}"></p></li>
+                                            <li><p th:text="'Lts: '+${drink.mililts}"></p></li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
+                                        <form th:action="@{/drinks/delete}" method="POST" id="formDeleteDrink">
+                                            <input th:value="${drink.id}" type="hidden" name="id">
+                                            <button type="submit" class="btn btn-outline-success">Yes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button title="Delete Drink" type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteDrink'+${drink.id}" >
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M4 7l16 0" />
+                                <path d="M10 11l0 6" />
+                                <path d="M14 11l0 6" />
+                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                             </svg>
                         </button>
                     </td>

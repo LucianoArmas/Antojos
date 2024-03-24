@@ -2,8 +2,7 @@ package antojos.ecommerce.user;
 
 
 // import org.hibernate.mapping.List;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.stereotype.Service;
 
@@ -15,8 +14,16 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-  public List<User> getAllUsers(){
-    return userRepository.findAll();
+  public List<User> getAllUsersExceptAdmin(String dniAdmin){
+    List<User> userList = userRepository.findAll();
+    for (Iterator<User> iterator = userList.iterator(); iterator.hasNext();){
+      User user = iterator.next();
+      if(user.getDni().equals(dniAdmin)){
+        iterator.remove();
+        break;
+      }
+    }
+    return userList;
   }
 
   public User getUserByDni(String dni){
@@ -26,6 +33,28 @@ public class UserService {
   public User findByDniAndUserPass(String dni, String pass){ return  userRepository.findByDniAndUserPass(dni, pass);}
   public void addUser(User user){
     userRepository.save(user);
+  }
+
+  public List<User> findByDniOrName(String dniOrName, String dniAdmin){
+    Set<User> userSet = new HashSet<>();
+
+    if (dniOrName.isBlank()){
+      List<User> userList;
+      userList = getAllUsersExceptAdmin(dniAdmin);
+      return userList;
+
+    }else {
+      List<User> usersByName = userRepository.findByNameContainingIgnoreCase(dniOrName);
+      List<User> usersByLastName = userRepository.findByLastNameContainingIgnoreCase(dniOrName);
+      List<User> usersByDni = userRepository.findByDniContainingIgnoreCase(dniOrName);
+
+      userSet.addAll(usersByName);
+      userSet.addAll(usersByDni);
+      userSet.addAll(usersByLastName);
+
+      return new ArrayList<>(userSet);
+
+    }
   }
 
   public void updateUser(User newUser, String dni, boolean flag_editFromAdmin){

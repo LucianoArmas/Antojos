@@ -55,6 +55,20 @@ public class ProductController {
     return "/products/index";
   }
 
+  @GetMapping("/searchAdmin")
+  public String searchProdsAdm(@RequestParam("query") String query, Model model){
+    Map<String, List<Product>> productsByType = productService.getProducts(query);
+
+    model.addAttribute("product", new Product());
+    model.addAttribute("foods", productsByType.getOrDefault("food", new ArrayList<>()));
+    model.addAttribute("drinks", productsByType.getOrDefault("drink", new ArrayList<>()));
+
+    return "/products/prodlist";
+  }
+
+
+
+
   private List<Product> setFilter(List<Product> productList, String filter){
     switch (filter) {
       case "alphabetic" -> {
@@ -128,23 +142,42 @@ public class ProductController {
     return "/products/index";
   }
 
+
+
+  @PostMapping("/resetErrorNewProd")
+  public String resetErrorNewProd(HttpSession session){
+    if ((session.getAttribute("error_showed") != null) && (session.getAttribute("error_showed").equals(true))){
+      session.removeAttribute("prodExist_error");
+      session.setAttribute("error_showed", false);
+    }
+    return "redirect:/products/prodsList";
+  }
+
   @GetMapping("/prodsList")
-  public String productList(Model model){
+  public String productList(Model model, HttpSession session){
     Map<String, List<Product>> productsByType = productService.getProducts("");
 
     model.addAttribute("product", new Product());
     model.addAttribute("foods", productsByType.getOrDefault("food", new ArrayList<>()));
     model.addAttribute("drinks", productsByType.getOrDefault("drink", new ArrayList<>()));
 
+//    resetErrorShowed(session);
+//    session.setAttribute("error_showed", false);
+
     return "/products/prodlist";
   }
 
 
 
+
+
+
   private void saveImage(String prodName, MultipartFile img){
     String fileName = prodName+".png";
+    String path = "src/main/resources/static/imgs/"+fileName;
+    System.out.println(path);
     try{
-      Files.write(Paths.get("src/main/resources/static/imgs/"+fileName), img.getBytes());
+      Files.write(Paths.get(path), img.getBytes());
     }catch (IOException e){
       e.printStackTrace();
     }
@@ -153,7 +186,7 @@ public class ProductController {
 
   @PostMapping("/newProd")
   //, @RequestParam("imageProd") MultipartFile img
-  public String createNewProd(@ModelAttribute("product") Product product, Model model, HttpSession session, @RequestParam("lts") float lts, @RequestParam("amountPeople") int amountPeople, @RequestParam("editType") String type){
+  public String createNewProd(@ModelAttribute("product") Product product, Model model, HttpSession session, @RequestParam("lts") float lts, @RequestParam("amountPeople") int amountPeople, @RequestParam("editType") String type, @RequestParam("imageProd") MultipartFile img){
     boolean flag_prodExist = productService.verifyProdByName(product.getName());
 
 
@@ -179,10 +212,10 @@ public class ProductController {
         drinkService.addDrink(drink);
 
       }
-//      saveImage(product.getName(), img);
+      saveImage(product.getName(), img);
     }else {
       session.setAttribute("prodExist_error", "The product: " + product.getName() + " already exists ");
-      System.out.println(session.getAttribute("prodExist_error"));
+      session.setAttribute("error_showed", true);
     }
 
     return "redirect:/products/prodsList";

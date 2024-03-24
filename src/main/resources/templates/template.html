@@ -12,7 +12,7 @@
     <header th:fragment="header">
         <nav class="navbar navbar-expand-lg text-center justify-content-center bg-black">
 
-            <div class="row w-100 align-content-center" style="height: 50px;">
+            <div class="row w-100 align-content-center" style="height: 50px; ">
 
 
                 <div class="col-2 d-flex justify-content-around align-content-center">
@@ -26,8 +26,8 @@
 
 
 
-                <div th:if="${session.user == null || session.user.getAccessLvl() != 'admin'}" class="col-7 d-flex align-content-center" style="justify-content: center">
-                    <form class=" d-flex" role="search" style="width: 40rem;" action="/search">
+                <div  class="col-7 d-flex align-content-center" style="justify-content: center">
+                    <form th:if="${session.user == null || session.user.getAccessLvl() != 'admin'}" class=" d-flex" role="search" style="width: 40rem;" action="/search">
                         <input name="query" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-primary d-grid align-content-center" type="submit">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -39,7 +39,7 @@
 
 
 
-                <div th:if="${session.user}"  class="col-3 d-flex align-content-center dropDowns" style="display: flex; position: fixed; right: 0;">
+                <div th:if="${session.user}"  class="col-3 d-flex align-content-center dropDowns" style="display: flex; position: relative; right: 0;">
                     <div class="dropdown-center dropdownCart" th:if="${session.user.accessLvl == 'client'}">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shopping-cart" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -74,8 +74,8 @@
                             </table>
                             <a class="btn btn-outline-warning" href="/orders/cart" style="display: block; margin: 10px">View Cart</a>
                         </div>
-                        <div th:if="${session.orderLineList.isEmpty()}" class="dropdown-menu dropdown-menu-dark" style="display: grid; justify-content: center;">
-                            <p style="color: #EF3B3A"><b>Empty cart</b></p>
+                        <div th:if="${session.orderLineList.isEmpty()}" class="dropdown-menu dropdown-menu-dark" >
+                            <p class="dropdown-item-text" style="color: #EF3B3A; text-align: center;" ><b>Empty cart</b></p>
                         </div>
                     </div>
 

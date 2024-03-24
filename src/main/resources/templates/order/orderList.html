@@ -8,7 +8,7 @@
 
 <table class="table table-dark table-striped">
     <thead>
-    <tr>
+    <tr style="text-align: center;">
         <th scope="col" style="text-align: center">Date</th>
         <th scope="col" style="text-align: center">Total Price</th>
         <th scope="col" style="text-align: center"></th>
@@ -17,7 +17,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="order : ${ordersAccepted}">
+    <tr th:each="order : ${ordersAccepted}" style="text-align: center;">
         <td th:text="${order.getDate()}" style="text-align: center;"></td>
         <td th:text="${order.getTotPrice()}" style="text-align: center;"></td>
         <td style="text-align: center;">
