@@ -31,7 +31,7 @@ public class LoginController {
   }
 
   private Order setOrderSession(User user){
-    Order order = orderService.getByUserAndState(user, "pending");
+    Order order = orderService.getByUserAndStatus(user, "pending");
     if(order == null){
       Date today = new Date();
       order = new Order(user,today, (float) 0,"pending");
