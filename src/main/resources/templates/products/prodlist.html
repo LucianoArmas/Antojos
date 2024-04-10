@@ -272,7 +272,7 @@
                     <td th:text="${drink.description}"></td>
                     <td th:text="${drink.price}"></td>
                     <td th:text="${drink.stock}"></td>
-                    <td th:text="${drink.mililts}+' lts'"></td>
+                    <td th:text="${drink.lts}+' lts'"></td>
                     <td>
                         <div class="modal fade" th:id="'editDrinkModal'+${drink.id}" tabindex="-1" aria-labelledby="exampleLabel" aria-hidden="true" style="--bs-modal-bg: #343a40;">
                             <div class="modal-dialog">
@@ -296,8 +296,8 @@
                                             <label for="editStockDrink" style="margin-top: 1rem;">Stock</label>
                                             <input type="number" th:value="${drink.stock}" name="stock" id="editStockDrink"/>
 
-                                            <label for="editMililtsDrink" style="margin-top: 1rem;">Amount of liters</label>
-                                            <input type="number" th:value="${drink.mililts}" name="lts" id="editMililtsDrink"/>
+                                            <label for="editLtsDrink" style="margin-top: 1rem;">Amount of liters</label>
+                                            <input type="number" th:value="${drink.lts}" name="lts" id="editLtsDrink"/>
 
                                             <input th:value="${drink.id}" type="hidden" name="id">
 
@@ -340,7 +340,7 @@
                                             <li><p th:text="'Desc: '+${drink.description}"></p></li>
                                             <li><p th:text="'Price: '+${drink.price}"></p></li>
                                             <li><p th:text="'Stock: '+${drink.stock}"></p></li>
-                                            <li><p th:text="'Lts: '+${drink.mililts}"></p></li>
+                                            <li><p th:text="'Lts: '+${drink.lts}"></p></li>
                                         </ul>
                                     </div>
                                     <div class="modal-footer">

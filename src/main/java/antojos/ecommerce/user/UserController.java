@@ -3,56 +3,123 @@ package antojos.ecommerce.user;
 import java.util.List;
 import java.util.Objects;
 
+import antojos.ecommerce.auth.Verifier;
+import antojos.ecommerce.jwt.JwtService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/users")
 public class UserController {
   private UserService userService;
+  private Verifier verifier;
+  private JwtService jwtService;
+  private UserDetailsService userDetailsService;
+  private PasswordEncoder passwordEncoder;
 
-  public UserController(UserService userService){
-    this.userService = userService;
-  }
+
+//  @GetMapping("/list")
+//  public String listUsers(Model model, HttpSession session){
+//    User userInSession = (User) session.getAttribute("user");
+//    if (Objects.equals(userInSession.getAccessLvl(), "admin")){
+//      List<User> users = userService.getAllUsersExceptAdmin(userInSession.getDni());
+//      model.addAttribute("users", users);
+//      return "/users/userlist";
+//    }
+//    return "redirect:/";
+//  }
+
+//  private boolean verifyToken(String token, String userDni){
+//    UserDetails userDetails = userDetailsService.loadUserByUsername(userDni);
+//    return jwtService.isTokenValid(token,userDetails);
+//  }
+//
+//  private Role verifyRole(HttpSession session){
+//    User userInSession = (User) session.getAttribute("user");
+//    Role role = null;
+//
+//    if (userInSession.getRole().equals(Role.ADMIN)){
+//      role = Role.ADMIN;
+//    }
+//
+//    if (userInSession.getRole().equals(Role.USER)){
+//      role = Role.USER;
+//    }
+//
+//    return role;
+//
+//  }
+
 
   @GetMapping("/list")
   public String listUsers(Model model, HttpSession session){
+
+    String tokenInSession = (String) session.getAttribute("token");
     User userInSession = (User) session.getAttribute("user");
-    if (Objects.equals(userInSession.getAccessLvl(), "admin")){
-      List<User> users = userService.getAllUsersExceptAdmin(userInSession.getDni());
-      model.addAttribute("users", users);
-      return "/users/userlist";
+
+    if (verifier.verifyToken(tokenInSession,userInSession.getDni())){
+      if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
+
+        List<User> users = userService.getAllUsersExceptAdmin(userInSession.getDni());
+        model.addAttribute("users", users);
+        return "/users/userlist";
+
+      } else{
+        return "/users/login";
+      }
+    }else{
+      return "/users/login";
     }
-    return "redirect:/";
+
   }
 
 
   @GetMapping("/searchAdmin")
   public String searchUser_Admin(@RequestParam("query") String query, Model model, HttpSession session){
-    User userInSession = (User) session.getAttribute("user");
-    List<User> userList = userService.findByDniOrName(query, userInSession.getDni());
 
-    if(!userList.isEmpty()){
-      model.addAttribute("users", userList);
+    User userInSession = (User) session.getAttribute("user");
+    String tokenInSession = (String) session.getAttribute("token");
+
+    if (verifier.verifyToken(tokenInSession,userInSession.getDni())){
+      if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
+        List<User> userList = userService.findByDniOrName(query, userInSession.getDni());
+
+        if(!userList.isEmpty()){
+          model.addAttribute("users", userList);
+        }else {
+          model.addAttribute("userNotFounded", "The user: " + query + " not exists");
+        }
+        return "/users/userlist";
+
+      }else {
+        return "/users/login";
+      }
     }else {
-      model.addAttribute("userNotFounded", "The user: " + query + " not exists");
+      return "/users/login";
     }
 
-    return "/users/userlist";
+
+
+
   }
 
 
 
-  @GetMapping("/add")
+  @GetMapping("/add") //MEPA Q NO SE USA
   public String addUserForm(Model model){
     model.addAttribute("user", new User());
     return "users/add";
   }
-  @PostMapping("/add")
+  @PostMapping("/add") //MEPA Q NO SE USA
   public String addUser(@ModelAttribute User user){
     userService.addUser(user);
     return "redirect:/users/list";
@@ -68,58 +135,124 @@ public class UserController {
 
   @GetMapping("/edit")
   public String editUserForm( Model model, HttpSession session){
+
     User userSession = (User) session.getAttribute("user");
     String dniUser = userSession.getDni();
 
-    User userBD = userService.getUserByDni(dniUser);
+    String tokenInSession = (String) session.getAttribute("token");
 
-    model.addAttribute("user", userBD);
+    if (verifier.verifyToken(tokenInSession,dniUser)){
+      if (verifier.verifyRole(session) != null){
+        User userBD = userService.getUserByDni(dniUser);
 
-    boolean flagEditPassReset = resetFlagEditPass(session);
-    session.setAttribute("flag_canEditPass", flagEditPassReset);
+        model.addAttribute("user", userBD);
 
-    return "/users/editProfile";
+        boolean flagEditPassReset = resetFlagEditPass(session);
+        session.setAttribute("flag_canEditPass", flagEditPassReset);
+
+        return "/users/editProfile";
+      }else {
+        return "/users/login";
+      }
+    }else {
+      return "/users/login";
+    }
+
+
   }
+
+
+
   @PostMapping("/editProfile")
-  public String editProfile(@RequestParam String dni, @ModelAttribute("user") @Valid User newUser, HttpSession session, BindingResult result){
-    userService.updateUser(newUser,dni, false);
-    session.setAttribute("flag_canEditPass", false);
-    return "/users/editProfile";
+  public String editProfile(@RequestParam String dni, @RequestParam String token, @ModelAttribute("user") @Valid User newUser, HttpSession session, BindingResult result){
+
+    if(verifier.verifyToken(token,dni)){
+      if (verifier.verifyRole(session) != null){
+        userService.updateUser(newUser,dni, false);
+        session.setAttribute("flag_canEditPass", false);
+        return "/users/editProfile";
+      }else {
+        return "/users/login";
+      }
+    }else {
+      return "/users/login";
+    }
   }
 
   @PostMapping("/editPass")
-  public String editPass(HttpSession session, @RequestParam String pass, @RequestParam String dni, Model model){
-    User userFound = userService.findByDniAndUserPass(dni,pass);
-    User userSession = (User) session.getAttribute("user");
-    if(userFound != null){
-      session.setAttribute("flag_canEditPass", true);
-      session.setAttribute("editPassForm", true);
+  public String editPass(HttpSession session, @RequestParam String pass, @RequestParam String token, @RequestParam String dni, Model model){
+
+    if (verifier.verifyToken(token,dni)){
+
+      if (verifier.verifyRole(session) != null){
+        User userByDni = userService.getUserByDni(dni);
+        String passwordEncodedInBD = userByDni.getPassword();
+        boolean flag_passwordsMatches = passwordEncoder.matches(pass, passwordEncodedInBD);
+
+        User userSession = (User) session.getAttribute("user");
+
+        if (flag_passwordsMatches){
+          session.setAttribute("flag_canEditPass", true);
+          session.setAttribute("editPassForm", true);
+        }else {
+          session.setAttribute("flag_canEditPass", false);
+          session.setAttribute("editPassForm", false);
+          model.addAttribute("error", "Incorrect userPass");
+        }
+
+        model.addAttribute("user", userSession);
+        return "/users/editProfile";
+      }else {
+        return "/users/login";
+      }
     }else {
-      session.setAttribute("flag_canEditPass", false);
-      session.setAttribute("editPassForm", false);
-      model.addAttribute("error", "Incorrect password");
+      return "/users/login";
     }
-    model.addAttribute("user", userSession);
-    return "/users/editProfile";
   }
 
 
   @PostMapping("/editUser")
-  public String editUser(@RequestParam String dni, @RequestParam String name, @RequestParam String lastname, @RequestParam String email, @RequestParam String lvlAcc){
-    User userEdit = new User();
-    userEdit.setName(name);
-    userEdit.setLastName(lastname);
-    userEdit.setDni(dni);
-    userEdit.setAccessLvl(lvlAcc);
-    userEdit.setEmail(email);
-    userService.updateUser(userEdit, dni, true);
-    return "redirect:/users/list";
+  public String editUser(@RequestParam String dni, @RequestParam String name, @RequestParam String lastname, @RequestParam String email, @RequestParam Role role, HttpSession session){
+
+    String tokenInSession = (String) session.getAttribute("token");
+    String dniUserInSession = ((User) session.getAttribute("user")).getDni();
+
+    if (verifier.verifyToken(tokenInSession,dniUserInSession)){
+      if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
+        User userEdit = new User();
+        userEdit.setName(name);
+        userEdit.setLastName(lastname);
+        userEdit.setDni(dni);
+        userEdit.setRole(role);
+        userEdit.setEmail(email);
+        userService.updateUser(userEdit, dni, true);
+        return "redirect:/users/list";
+      }else {
+        return "/users/login";
+      }
+    }else {
+      return "/users/login";
+    }
   }
 
 
   @PostMapping("/delete")
-  public String deleteFood(@RequestParam("dni") String dni){
-    userService.deleteUser(dni);
-    return "redirect:/users/list";
+  public String deleteUser(@RequestParam("dni") String dni, HttpSession session){
+    String tokenInSession = (String) session.getAttribute("token");
+    String dniUserInSession = ((User) session.getAttribute("user")).getDni();
+
+    if (verifier.verifyToken(tokenInSession,dniUserInSession)){
+      if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
+        userService.deleteUser(dni);
+        return "redirect:/users/list";
+      }else {
+        return "/users/login";
+      }
+    }else {
+      return "/users/login";
+    }
+
   }
+
+
 }

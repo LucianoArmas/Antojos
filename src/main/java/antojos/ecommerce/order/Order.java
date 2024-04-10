@@ -3,10 +3,14 @@ package antojos.ecommerce.order;
 import antojos.ecommerce.orderLine.OrderLine;
 import antojos.ecommerce.user.User;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "orderEntity")
 public class Order {
@@ -24,71 +28,26 @@ public class Order {
   @Column(nullable = true)
   private float totPrice;
   @Column(nullable = true)
-  private String state;
+  private String status;
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
   private List<OrderLine> orderLineList;
 
 
-  
-  public Order(){}
-
-  public Order(Long cod, User user, Date date, float totPrice, String state, List<OrderLine> orderLineList) {
+  public Order(Long cod, User user, Date date, float totPrice, String status, List<OrderLine> orderLineList) {
     this.cod = cod;
     this.user = user;
     this.date = date;
     this.totPrice = totPrice;
-    this.state = state;
+    this.status = status;
     this.orderLineList = orderLineList;
   }
-  public Order(User user, Date date, Float totPrice, String state) {
+  public Order(User user, Date date, Float totPrice, String status) {
     this.user = user;
     this.date = date;
     this.totPrice = totPrice;
-    this.state = state;
+    this.status = status;
   }
 
-  public Long getCod() {
-    return cod;
-  }
-  public void setCod(Long cod) {
-    this.cod = cod;
-  }
-  public User getUser() {
-    return user;
-  }
-  public void setUser(User user) {
-    this.user = user;
-  }
-  public Date getDate() {
-    return date;
-  }
-  public void setDate(Date date) {
-    this.date = date;
-  }
-  public float getTotPrice() {
-    return totPrice;
-  }
-  public void setTotPrice(float totPrice) {
-    this.totPrice = totPrice;
-  }
-  public String getState() {
-    return state;
-  }
-  public void setState(String state) {
-    this.state = state;
-  }
-  public List<OrderLine> getOrderLineList() {
-    return orderLineList;
-  }
-  public void setOrderLineList(List<OrderLine> orderLineList) {
-    this.orderLineList = orderLineList;
-  }
-
-  @Override
-  public String toString() {
-    return "Order [cod=" + cod + ", user=" + user + ", date=" + date + ", totPrice=" + totPrice
-        + ", state=" + state +"]";
-  }
 
 
   public float calcuTotal(){

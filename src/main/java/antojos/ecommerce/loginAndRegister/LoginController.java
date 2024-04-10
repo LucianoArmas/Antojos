@@ -1,29 +1,38 @@
-package antojos.ecommerce.user;
+package antojos.ecommerce.loginAndRegister;
 
+import antojos.ecommerce.auth.AuthResponse;
+import antojos.ecommerce.auth.AuthService;
+import antojos.ecommerce.auth.LoginRequest;
 import antojos.ecommerce.order.Order;
 import antojos.ecommerce.order.OrderService;
 import antojos.ecommerce.orderLine.OrderLine;
+import antojos.ecommerce.user.Role;
+import antojos.ecommerce.user.User;
+import antojos.ecommerce.user.UserService;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 
 @Controller
 @RequestMapping("/login")
+@RequiredArgsConstructor
 public class LoginController {
-  private UserService userService;
-  private OrderService orderService;
 
-  public LoginController(UserService userService, OrderService orderService) {
-    this.userService = userService;
-    this.orderService = orderService;
-  }
+  private final UserService userService;
+  private final OrderService orderService;
+  private final AuthService authService;
+  private final PasswordEncoder passwordEncoder;
+
+
 
   @GetMapping
   public String showLoginForm(){
@@ -40,22 +49,93 @@ public class LoginController {
     return order;
   }
 
+
+
+
+
   @PostMapping
-  public String getInfoLoginForm(@RequestParam String dni, @RequestParam String pass, Model model, HttpSession session){
-    User user = userService.findByDniAndUserPass(dni, pass);
-    if( user != null){
-      session.setAttribute("dni", dni);
-      session.setAttribute("user", user);
+  public String login(@RequestParam String dni, @RequestParam String pass, HttpSession session, Model model){
+    LoginRequest request = new LoginRequest(dni,pass);
 
-      Order order = setOrderSession(user);
-      session.setAttribute("orderPending", order);
+    AuthResponse authResponse = authService.login(request);
 
-      List<OrderLine> orderLineList = orderService.getOrderLinesFromSession(session);
-      session.setAttribute("orderLineList", orderLineList);
-      return "redirect:";
-    } else {
+    if (authResponse != null && authResponse.getToken() != null){
+
+      User userByDni = userService.getUserByDni(request.getDni());
+      String passwordEncodedInBD = userByDni.getPassword();
+      boolean flag_passwordsMatches = passwordEncoder.matches(request.getPassword(), passwordEncodedInBD);
+
+      if (flag_passwordsMatches){
+
+        session.setAttribute("token",authResponse.getToken());
+        session.setAttribute("dni", request.getDni());
+        session.setAttribute("user", userByDni);
+
+        Order order = setOrderSession(userByDni);
+        session.setAttribute("orderPending", order);
+
+        List<OrderLine> orderLineList = orderService.getOrderLinesFromSession(session);
+        session.setAttribute("orderLineList", orderLineList);
+
+        return "redirect:";
+
+      }else{
+        model.addAttribute("error", "Invalid user");
+        return "/users/login";
+      }
+
+
+    }else{
       model.addAttribute("error", "Invalid user");
       return "/users/login";
     }
   }
+
+
+
+//  @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+//  public ResponseEntity<AuthResponse> login(@RequestParam String dni, @RequestParam String pass, HttpSession session){
+//    LoginRequest request = new LoginRequest(dni,pass);
+//
+//    AuthResponse authResponse = authService.login(request);
+//
+//    if (authResponse != null && authResponse.getToken() != null){
+//
+//      User user = userService.findByDniAndUserPass(request.getDni(), passwordEncoder.encode(request.getPassword()));
+//      session.setAttribute("dni", request.getDni());
+//      session.setAttribute("user", user);
+//
+//      Order order = setOrderSession(user);
+//      session.setAttribute("orderPending", order);
+//
+//      List<OrderLine> orderLineList = orderService.getOrderLinesFromSession(session);
+//      session.setAttribute("orderLineList", orderLineList);
+//
+//      return ResponseEntity.status(HttpStatus.FOUND)
+//              .header("Location","/")
+//              .body(authResponse);
+//    }else {
+//      return ResponseEntity.ok(authResponse);
+//    }
+//
+//  }
+
+//  @PostMapping
+//  public String getInfoLoginForm(@RequestParam String dni, @RequestParam String pass, Model model, HttpSession session){
+//    User user = userService.findByDniAndUserPass(dni, pass);
+//    if( user != null){
+//      session.setAttribute("dni", dni);
+//      session.setAttribute("user", user);
+//
+//      Order order = setOrderSession(user);
+//      session.setAttribute("orderPending", order);
+//
+//      List<OrderLine> orderLineList = orderService.getOrderLinesFromSession(session);
+//      session.setAttribute("orderLineList", orderLineList);
+//      return "redirect:";
+//    } else {
+//      model.addAttribute("error", "Invalid user");
+//      return "/users/login";
+//    }
+//  }
 }

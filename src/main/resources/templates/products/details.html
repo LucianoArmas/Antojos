@@ -13,7 +13,7 @@
                 <h5 class="card-title" th:text="${productSelected.name}" ></h5>
                 <p class="card-text" th:text="${productSelected.description}"></p>
                 <p th:if="${(productSelected.getType() == 'food')}" class="card-text" th:text="'Amount of people can eat: '+${productSelected.amountPeopleEat}"></p>
-                <p th:if="${(productSelected.getType() == 'drink')}" class="card-text" th:text="${productSelected.mililts}+'lts'"></p>
+                <p th:if="${(productSelected.getType() == 'drink')}" class="card-text" th:text="${productSelected.lts}+'lts'"></p>
                 <p class="text-primary" th:text="'$'+${productSelected.price}"></p>
                 <div style="display: flex; justify-content: flex-end; align-items: center;" id="btns">
 

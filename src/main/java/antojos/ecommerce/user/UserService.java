@@ -4,15 +4,21 @@ package antojos.ecommerce.user;
 // import org.hibernate.mapping.List;
 import java.util.*;
 
+import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.security.crypto.keygen.BytesKeyGenerator;
+import org.springframework.security.crypto.keygen.KeyGenerators;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class UserService {
   private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
-  public UserService(UserRepository userRepository){
-    this.userRepository = userRepository;
-  }
 
   public List<User> getAllUsersExceptAdmin(String dniAdmin){
     List<User> userList = userRepository.findAll();
@@ -31,9 +37,21 @@ public class UserService {
   }
 
   public User findByDniAndUserPass(String dni, String pass){ return  userRepository.findByDniAndUserPass(dni, pass);}
+
+
+
+
+//  private void encryptPassword(User user){
+//    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//    String encodedPass = encoder.encode(user.getUserPass());
+//    user.setUserPass(encodedPass);
+//  }
+//
   public void addUser(User user){
+//    encryptPassword(user);
     userRepository.save(user);
   }
+
 
   public List<User> findByDniOrName(String dniOrName, String dniAdmin){
     Set<User> userSet = new HashSet<>();
@@ -57,6 +75,12 @@ public class UserService {
     }
   }
 
+
+
+
+
+
+  //MEPA Q ESTE METODO DEBERIA SER REEMPLAZADO POR public AuthResponse register(RegisterRequest request); (EN AuthService)
   public void updateUser(User newUser, String dni, boolean flag_editFromAdmin){
     User user = getUserByDni(dni);
     if(user != null){
@@ -68,7 +92,7 @@ public class UserService {
 
       if((newUser.getUserPass() == null) || (newUser.getUserPass().isBlank())){
         user.setUserPass(user.getUserPass());
-      }else {user.setUserPass(newUser.getUserPass());}
+      }else {user.setUserPass(passwordEncoder.encode(newUser.getUserPass()));}
 
       if (flag_editFromAdmin){
         user.setAccessLvl(newUser.getAccessLvl());

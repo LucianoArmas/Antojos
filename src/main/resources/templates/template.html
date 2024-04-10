@@ -27,7 +27,7 @@
 
 
                 <div  class="col-7 d-flex align-content-center" style="justify-content: center">
-                    <form th:if="${session.user == null || session.user.getAccessLvl() != 'admin'}" class=" d-flex" role="search" style="width: 40rem;" action="/search">
+                    <form th:if="${session.user == null || session.user.getRole().toString() != 'ADMIN'}" class=" d-flex" role="search" style="width: 40rem;" action="/search">
                         <input name="query" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-primary d-grid align-content-center" type="submit">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -40,7 +40,7 @@
 
 
                 <div th:if="${session.user}"  class="col-3 d-flex align-content-center dropDowns" style="display: flex; position: relative; right: 0;">
-                    <div class="dropdown-center dropdownCart" th:if="${session.user.accessLvl == 'client'}">
+                    <div class="dropdown-center dropdownCart" th:if="${session.user.getRole().toString() == 'USER'}">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shopping-cart" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -114,13 +114,13 @@
                 <button type="button" class="btn-close btn btn-outline-danger" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div th:if="${session.user}" class="sideMenu">
-                <div th:if="${session.user.getAccessLvl() == 'admin'}" class="offcanvas-body">
+                <div th:if="${session.user.getRole().toString() == 'ADMIN'}" class="offcanvas-body">
                     <a class="btn btn-outline-dark" href="/users/list">Users</a>
                     <a class="btn btn-outline-dark" href="/products/prodsList">Products</a>
                     <a class="btn btn-outline-dark" href="/orders/orderListAdmin">Orders</a>
                     <a class="btn btn-outline-danger" href="/logout">Log Out</a>
                 </div>
-                <div th:unless="${session.user.getAccessLvl() == 'admin'}" class="offcanvas-body">
+                <div th:unless="${session.user.getRole().toString() == 'ADMIN'}" class="offcanvas-body">
 <!--                    <a class="btn btn-outline-dark" href="/">Directions</a>-->
 <!--                    <a class="btn btn-outline-dark" href="/orders/ordersAccepted">Orders</a> ESTE ES EL LISTADO DE LAS ORDENES ACEPTADAS-->
                     <a class="btn btn-outline-dark" href="/orders/orderList">Orders</a>

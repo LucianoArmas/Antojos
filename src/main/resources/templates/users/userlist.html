@@ -45,7 +45,7 @@
             <th scope="col">NAME</th>
             <th scope="col">LAST NAME</th>
             <th scope="col">EMAIL</th>
-            <th scope="col">ACCESS LVL</th>
+            <th scope="col">ROLE</th>
             <th scope="col"></th>
             <th scope="col"></th>
         </tr>
@@ -56,7 +56,7 @@
                 <td th:text="${user.name}"></td>
                 <td th:text="${user.lastName}"></td>
                 <td th:text="${user.email}"></td>
-                <td th:text="${user.accessLvl}"></td>
+                <td th:text="${user.role}"></td>
                 <td>
                     <div class="modal fade" th:id="'editUserModal'+${user.dni}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-bg: #343a40;">
                         <div class="modal-dialog">
@@ -77,10 +77,10 @@
                                         <label for="editEmail" style="margin-top: 1rem;">Email</label>
                                         <input type="email" th:value="${user.email}" name="email" id="editEmail"/>
 
-                                        <label for="editLvlAccess" style="margin-top: 1rem;">Access Level</label>
-                                        <select class="form-select form-select-sm" aria-label="Small select example" id="editLvlAccess" name="lvlAcc">
-                                            <option selected hidden th:text="${user.accessLvl}"></option>
-                                            <option value="client">Client</option>
+                                        <label for="editRole" style="margin-top: 1rem;">Role</label>
+                                        <select class="form-select form-select-sm" aria-label="Small select example" id="editRole" name="role">
+                                            <option selected hidden th:text="${user.role}"></option>
+                                            <option value="client">User</option>
                                             <option value="admin">Admin</option>
                                         </select>
 
@@ -117,7 +117,7 @@
                 </td>
 
                 <td>
-                    <div class="modal fade" th:id="'deleteFood'+${user.dni}" tabindex="-1" aria-labelledby="deleteUserModal" aria-hidden="true" style="--bs-modal-bg: #343a40;">
+                    <div class="modal fade" th:id="'deleteUser'+${user.dni}" tabindex="-1" aria-labelledby="deleteUserModal" aria-hidden="true" style="--bs-modal-bg: #343a40;">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -127,6 +127,7 @@
                                 <div class="modal-body">
                                     <ul>
                                         <li><b th:text="'DNI: '+${user.dni}"></b></li>
+                                        <li><b th:text="'Role: '+${user.role}"></b></li>
                                         <li><b th:text="'Name: '+${user.name}"></b></li>
                                         <li><b th:text="'Lastname: '+${user.lastName}"></b></li>
                                         <li><b th:text="'Email: '+${user.email}"></b></li>
@@ -143,7 +144,7 @@
                         </div>
                     </div>
 
-                    <button title="Delete Food" type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteFood'+${user.dni}" >
+                    <button title="Delete User" type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteUser'+${user.dni}" >
                         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                             <path d="M4 7l16 0" />

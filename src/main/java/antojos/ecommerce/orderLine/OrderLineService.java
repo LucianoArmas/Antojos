@@ -33,16 +33,16 @@ public class OrderLineService {
   public void addOrderLine(OrderLine orderLine){
     orderLineRepository.save(orderLine);
   }
-  public void updateOrderLine(OrderLine oRderLine){
-    Long nro = oRderLine.getNro();
+  public void updateOrderLine(OrderLine orderLine){
+    Long nro = orderLine.getNumber();
     Optional<OrderLine> existingOrderLine = orderLineRepository.findById(nro);
     if(existingOrderLine.isPresent()){
       OrderLine updatedOL = existingOrderLine.get();
-      updatedOL.setNro(nro);
-      updatedOL.setQuantityProds(oRderLine.getQuantityProds());
-      updatedOL.setSubTotPrice(oRderLine.getSubTotPrice());
-      updatedOL.setOrder(oRderLine.getOrder());
-      updatedOL.setProduct(oRderLine.getProduct());
+      updatedOL.setNumber(nro);
+      updatedOL.setQuantityProds(orderLine.getQuantityProds());
+      updatedOL.setSubTotPrice(orderLine.getSubTotPrice());
+      updatedOL.setOrder(orderLine.getOrder());
+      updatedOL.setProduct(orderLine.getProduct());
 
       orderLineRepository.save(updatedOL);
     }

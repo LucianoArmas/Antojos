@@ -32,20 +32,20 @@ public class OrderService {
   }
 
   //MEPA Q LO TENDRIA Q ELIMINAR
-  public List<Order> getAllByState(String state){return orderRepository.findByState(state);}
+  public List<Order> getAllByStatus(String status){return orderRepository.findByStatus(status);}
 
   public List<Order> getByUser(User user){
     return orderRepository.findByUser(user);
   }
 
-  public Order getByUserAndState(User user, String state){return orderRepository.findByUserAndState(user, state);}
-  public List<Order> getOrdersByUserAndState(User user, String state){return orderRepository.findOrdersByUserAndState(user,state);}
+  public Order getByUserAndStatus(User user, String status){return orderRepository.findByUserAndStatus(user, status);}
+  public List<Order> getOrdersByUserAndStatus(User user, String status){return orderRepository.findOrdersByUserAndStatus(user,status);}
   public List<Order> getByUserAndDate(User user, Date dateFrom, Date dateTo){
     return orderRepository.findByUserAndDateBetween(user, dateFrom, dateTo);
   }
 
   public Map<String, List<Order>> divideOrdersByStatus(List<Order> orderList){
-    return orderList.stream().collect(Collectors.groupingBy(Order::getState));
+    return orderList.stream().collect(Collectors.groupingBy(Order::getStatus));
   }
 
   public List<Order> getOrdersBetweenDates(Date dateFrom, Date dateTo){return orderRepository.findByDateBetween(dateFrom, dateTo);}
@@ -70,7 +70,7 @@ public class OrderService {
       updatedShop.setUser(order.getUser());
       updatedShop.setOrderLineList(order.getOrderLineList());
       updatedShop.setTotPrice(order.calcuTotal());
-      updatedShop.setState(status);
+      updatedShop.setStatus(status);
 
       orderRepository.save(updatedShop);
     }
@@ -85,7 +85,7 @@ public class OrderService {
       orderLineList.add(orderLine);
     } else{
       for (OrderLine ol : orderLineList) {
-        if (Objects.equals(ol.getNro(), orderLine.getNro())) {
+        if (Objects.equals(ol.getNumber(), orderLine.getNumber())) {
           orderLineList.remove(ol);
           orderLineList.add(orderLine);
           break;
@@ -95,7 +95,7 @@ public class OrderService {
 
     if(flag_DeleteOL){
       for (OrderLine ol : orderLineList) {
-        if (Objects.equals(ol.getNro(), orderLine.getNro())) {
+        if (Objects.equals(ol.getNumber(), orderLine.getNumber())) {
           orderLineList.remove(ol);
           break;
         }
@@ -203,7 +203,7 @@ public class OrderService {
   }
 
   public void acceptOrder(Order order, HttpSession session){
-    order.setState("accepted");
+    order.setStatus("accepted");
     orderRepository.save(order);
     renewOrderPending(session);
   }
@@ -214,7 +214,7 @@ public class OrderService {
 
     User user = (User) session.getAttribute("user");
 
-    Order order = getByUserAndState(user, "pending");
+    Order order = getByUserAndStatus(user, "pending");
 
     if(order == null){
       Date today = new Date();
@@ -229,7 +229,7 @@ public class OrderService {
 
   public void cancelOrder(Long cod){
     Order order = getOrderByCod(cod);
-    order.setState("cancelled");
+    order.setStatus("cancelled");
     orderRepository.save(order);
   }
 

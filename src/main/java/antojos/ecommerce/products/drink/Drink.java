@@ -1,34 +1,28 @@
 package antojos.ecommerce.products.drink;
 
-import java.util.List;
-
-import antojos.ecommerce.orderLine.OrderLine;
 import antojos.ecommerce.products.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @DiscriminatorValue("drink")
 public class Drink extends Product{
 
-  @Column(name = "mililts")
-  private Float mililts;
+  @Column(name = "lts")
+  private Float lts;
 
-  public Drink() {
+
+  public Float getLts() {
+    return lts;
   }
 
-  public Drink(Long id, String name, String desc, Float price, int stock, List<OrderLine> orderLineList, Float mililts) {
-    super(id, name, desc, price, stock, orderLineList);
-    this.mililts = mililts;
-  }
-
-  public Float getMililts() {
-    return mililts;
-  }
-
-  public void setMililts(Float mililts) {
-    this.mililts = mililts;
+  public void setLts(Float lts) {
+    this.lts = lts;
   }
   
 }

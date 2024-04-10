@@ -22,9 +22,9 @@ public interface OrderRepository extends JpaRepository<Order,Long>{
     @Param("toDate") Date toDate
   );
 
-  Order findByUserAndState(User user, String state);
-  List<Order> findOrdersByUserAndState(User user, String state);
+  Order findByUserAndStatus(User user, String status);
+  List<Order> findOrdersByUserAndStatus(User user, String status);
 
-  List<Order> findByState(String state);
+  List<Order> findByStatus(String status);
 
 }

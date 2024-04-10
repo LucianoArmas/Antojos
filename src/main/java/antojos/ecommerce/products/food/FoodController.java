@@ -4,56 +4,78 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
+import antojos.ecommerce.auth.Verifier;
+import antojos.ecommerce.user.Role;
+import antojos.ecommerce.user.User;
+import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
+@AllArgsConstructor
 @Controller
 @RequestMapping("/foods")
 public class FoodController {
   private FoodService foodService;
-
-  public FoodController(FoodService foodService) {
-    this.foodService = foodService;
-  }
+  private Verifier verifier;
 
 
   @PostMapping("/edit")
-  public String editFood(@RequestParam Long id, @RequestParam String name, @RequestParam String desc, @RequestParam Float price, @RequestParam int stock, @RequestParam int amountPeople){
-    Food food = new Food();
-    food.setId(id);
-    food.setName(name);
-    food.setDescription(desc);
-    food.setPrice(price);
-    food.setStock(stock);
-    food.setAmountPeopleEat(amountPeople);
-    foodService.updateFood(food);
-    return "redirect:/products/prodsList";
+  public String editFood(@RequestParam Long id, @RequestParam String name, @RequestParam String desc, @RequestParam Float price, @RequestParam int stock, @RequestParam int amountPeople, HttpSession session){
+    String tokenInSession = (String) session.getAttribute("token");
+    String dniUserInSession = ((User) session.getAttribute("user")).getDni();
+
+    if (verifier.verifyToken(tokenInSession,dniUserInSession)){
+      if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
+        Food food = new Food();
+        food.setId(id);
+        food.setName(name);
+        food.setDescription(desc);
+        food.setPrice(price);
+        food.setStock(stock);
+        food.setAmountPeopleEat(amountPeople);
+        foodService.updateFood(food);
+        return "redirect:/products/prodsList";
+      }else {
+        return "/users/login";
+      }
+    }else {
+      return "/users/login";
+    }
+
   }
 
 
 
-  private void deleteImgFood(Long id){
+  private void deleteImgFood(Long id) throws IOException{
     Food food = foodService.getFoodById(id);
 
     if(food != null){
       String path = "src/main/resources/static/imgs/"+food.getName()+".png";
-      try {
         Files.deleteIfExists(Paths.get(path));
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
     }
   }
 
 
   @PostMapping("/delete")
-  public String deleteFood(@RequestParam("id") Long id){
-    deleteImgFood(id);
-    foodService.deleteFood(id);
-    return "redirect:/products/prodsList";
+  public String deleteFood(@RequestParam("id") Long id, HttpSession session) throws IOException {
+    String tokenInSession = (String) session.getAttribute("token");
+    String dniUserInSession = ((User) session.getAttribute("user")).getDni();
+
+    if (verifier.verifyToken(tokenInSession,dniUserInSession)){
+      if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
+        deleteImgFood(id);
+        foodService.deleteFood(id);
+        return "redirect:/products/prodsList";
+      }else {
+        return "/users/login";
+      }
+    }else {
+      return "/users/login";
+    }
   }
 
 

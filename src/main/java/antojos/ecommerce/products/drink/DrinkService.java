@@ -34,7 +34,7 @@ public class DrinkService {
       updatedDrink.setName(drink.getName());
       updatedDrink.setDescription(drink.getDescription());
       updatedDrink.setPrice(drink.getPrice());
-      updatedDrink.setMililts(drink.getMililts());
+      updatedDrink.setLts(drink.getLts());
       updatedDrink.setStock(drink.getStock());
 
       drinkRepository.save(updatedDrink);

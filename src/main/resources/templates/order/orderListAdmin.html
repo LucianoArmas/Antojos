@@ -34,7 +34,8 @@
         <th scope="col" style="text-align: center">Total Price</th>
         <th scope="col" style="text-align: center"></th>
         <th scope="col" style="text-align: center"></th>
-        <th scope="col" style="text-align: center">State</th>
+        <th scope="col" style="text-align: center"></th>
+        <th scope="col" style="text-align: center">Status</th>
     </tr>
     </thead>
     <tbody>
@@ -56,7 +57,7 @@
             </div>
         </td>
         <td>
-            <div class="modal fade" th:id="'modStateFormModal'+${orderAccepted.getCod()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-bg: #343a40;">
+            <div class="modal fade" th:id="'modStatusFormModal'+${orderAccepted.getCod()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-bg: #343a40;">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -77,7 +78,7 @@
                             <form th:action="@{/orders/modStatusAdmin}" method="POST" id="formCancelOrder">
                                 <label for="editOrderStatus">Order Status</label>
                                 <select class="form-select form-select-sm" aria-label="Small select example" id="editOrderStatus" name="orderStatus">
-                                    <option selected hidden th:text="${orderAccepted.getState()}"></option>
+                                    <option selected hidden th:text="${orderAccepted.getStatus()}"></option>
                                     <option value="delivered">Delivered</option>
                                     <option value="cancelled">Cancelled</option>
                                 </select>
@@ -90,7 +91,7 @@
                 </div>
             </div>
 
-            <button title="Edit Order Status" type="button" class="btn btn-outline-warning" data-bs-toggle="modal" th:data-bs-target="'#modStateFormModal'+${orderAccepted.getCod()}" >
+            <button title="Edit Order Status" type="button" class="btn btn-outline-warning" data-bs-toggle="modal" th:data-bs-target="'#modStatusFormModal'+${orderAccepted.getCod()}" >
                 <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
@@ -99,7 +100,10 @@
                 </svg>
             </button>
         </td>
-        <td th:text="${orderAccepted.getState()}" style="text-align: center;"></td>
+
+        <td></td>
+
+        <td th:text="${orderAccepted.getStatus()}" style="text-align: center;"></td>
 
     </tr>
 
@@ -121,7 +125,8 @@
             </div>
         </td>
         <td></td>
-        <td th:text="${orderDelivered.getState()}" style="text-align: center;"></td>
+        <td></td>
+        <td th:text="${orderDelivered.getStatus()}" style="text-align: center;"></td>
     </tr>
 
     <tr th:each="orderCancelled : ${orderListCancelled}" class="table-danger"  style="text-align: center;">
@@ -142,7 +147,58 @@
             </div>
         </td>
         <td></td>
-        <td th:text="${orderCancelled.getState()}" style="text-align: center;"></td>
+        <td>
+            <div class="modal fade" th:id="'deleteOrder'+${orderCancelled.cod}" tabindex="-1" aria-labelledby="deleteOrderModal" aria-hidden="true" style="--bs-modal-bg: #343a40; color: #FFFFFF">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="deleteOrderModal">Are oyu sure to delete this Order?</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul>
+                                <li><b th:text="'Code: '+${orderCancelled.cod}"></b></li>
+                                <li><b th:text="'Owner: '+${orderCancelled.user.dni}+' - '+${orderCancelled.user.name}"></b></li>
+                                <li><b th:text="'Date: '+${orderCancelled.date}"></b></li>
+                                <li><b th:text="'Status: '+${orderCancelled.status}"></b></li>
+                                <li><b th:text="'Total Price: '+${orderCancelled.totPrice}"></b></li>
+                                <li>
+                                    <div class="btn-group dropend">
+                                        <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Products
+                                        </button>
+                                        <ul class="dropdown-menu" style="width: max-content; padding-inline: 10px;">
+                                            <li th:each="ol : ${orderCancelled.getOrderLineList()}">
+                                                <p th:text=" ${ol.getQuantityProds()}+'x - '+${ol.getProduct().getName()}+' - $'+${ol.getProduct().getPrice()}"></p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
+                            <form th:action="@{/orders/delete}" method="POST" id="formDeleteUser">
+                                <input th:value="${orderCancelled.cod}" type="hidden" name="cod">
+                                <button type="submit" class="btn btn-outline-success">Yes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button title="Delete Order" type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteOrder'+${orderCancelled.cod}" >
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M4 7l16 0" />
+                    <path d="M10 11l0 6" />
+                    <path d="M14 11l0 6" />
+                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                </svg>
+            </button>
+        </td>
+        <td th:text="${orderCancelled.getStatus()}" style="text-align: center;"></td>
     </tr>
 
 

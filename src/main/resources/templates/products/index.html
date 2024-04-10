@@ -8,7 +8,7 @@
 <div th:replace="~{template.html :: sideMenu}"></div>
 
 <div class="mainContainer" th:if="${session.user}">
-    <div class="adminContainer" th:if="${session.user.getAccessLvl() == 'admin'}">
+    <div class="adminContainer" th:if="${session.user.getRole().toString() == 'ADMIN'}">
         <p style="text-align: center; margin-top: 1rem;"> WELCOME ADMIN <b th:text="${session.user.name}"></b></p>
         <div id="btnsAdmin" style="display: flex; justify-content: space-evenly; margin-top: 3rem;">
             <a class="btn btn-light" href="/users/list">Users</a>
@@ -19,7 +19,7 @@
 </div>
 
 
-<div th:if="${(session.user == null) || (session.user.getAccessLvl() != 'admin')}" class="prodContainer" style="display: grid; justify-content: center;" th:fragment="prodsCli">
+<div th:if="${(session.user == null) || (session.user.getRole().toString() != 'ADMIN')}" class="prodContainer" style="display: grid; justify-content: center;" th:fragment="prodsCli">
 <h1>PRODUCTS</h1>
     <div id="subTitleFood" style="display: flex; justify-content: space-between; align-items: center; justify-self: center; width: 80%;" th:if="${foods.size() != 0}">
         <h2 style="justify-self: center; padding-bottom: 10px; padding-top: 10px">FOODS</h2>
@@ -130,7 +130,7 @@
         </div>
     </div>
 
-    <h3 th:if="${(foods.size() == 0)&&(drinks.size() == 0)}" style="color: red"><b>Products don´t exist</b></h3>
+    <h3 th:if="${(foods.size() == 0)&&(drinks.size() == 0)}" style="color: red"><b>No products found</b></h3>
 
 </div>
 

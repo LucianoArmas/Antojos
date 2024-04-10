@@ -31,13 +31,13 @@
             <p th:if="${error}" style="color: darkred" th:text="${error}"></p>
 
 
-
+            <input th:value="${session.token}" type="hidden" name="token">
             <input th:value="${user.dni}" type="hidden" name="dni">
 
 <!--            <div class="btnEditContainer"><a class="btn btn-outline-primary btnEdit">Edit Profile</a></div>-->
 
             <div class="buttons--form" style="display: flex; justify-content: space-around; margin-bottom: 4rem; margin-top: 3rem;">
-                <button class="btn btn-outline-secondary btnCancel" type="reset">Cancel</button>
+                <button class="btn btn-outline-secondary btnCancel" type="reset">Reset Changes</button>
                 <button class="btn btn-outline-success btnSave" type="submit">Save Changes</button>
             </div>
         </form>
@@ -56,7 +56,10 @@
                 <form th:action="@{/users/editPass}" method="post">
                     <label for="verifyPass">You have to enter your actual password to verify yourself</label>
                     <input type="password" name="pass" id="verifyPass">
-                    <input type="text" name="dni" th:value="${user.dni}" hidden="hidden">
+
+<!--                    <input type="text" name="dni" th:value="${user.dni}" hidden="hidden">-->
+                    <input type="hidden" name="dni" th:value="${user.dni}">
+                    <input th:value="${session.token}" type="hidden" name="token">
 
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Verify password</button>

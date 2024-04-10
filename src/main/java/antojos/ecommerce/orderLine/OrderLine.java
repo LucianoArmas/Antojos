@@ -3,8 +3,10 @@ package antojos.ecommerce.orderLine;
 import antojos.ecommerce.order.Order;
 import antojos.ecommerce.products.Product;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 
+@Data
 @Entity
 
 public class OrderLine {
@@ -42,43 +44,4 @@ public class OrderLine {
 
   }
 
-  public Long getNro() {
-    return number;
-  }
-
-  public void setNro(Long nro) {
-    this.number = nro;
-  }
-
-  public int getQuantityProds() {
-    return quantityProds;
-  }
-
-  public void setQuantityProds(int quantityProds) {
-    this.quantityProds = quantityProds;
-  }
-
-  public Float getSubTotPrice() {
-    return subTotPrice;
-  }
-
-  public void setSubTotPrice(Float subTotPrice) {
-    this.subTotPrice = subTotPrice;
-  }
-
-  public Product getProduct() {
-    return product;
-  }
-
-  public void setProduct(Product product) {
-    this.product = product;
-  }
-
-  public Order getOrder() {
-    return order;
-  }
-
-  public void setOrder(Order order) {
-    this.order = order;
-  }
 }
