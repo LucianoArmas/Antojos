@@ -101,4 +101,18 @@ body{
     align-items: center;
 }
 
+#foodContainer, #drinkContainer {
+    grid-auto-rows: 30rem;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+}
+
+
+@media (max-width: 640px) {
+    #foodContainer, #drinkContainer{
+        grid-auto-rows: 20rem;
+        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    }
+}
+
+
 

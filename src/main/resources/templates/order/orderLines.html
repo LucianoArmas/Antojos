@@ -24,13 +24,13 @@
         <td style="justify-content: center">
             <div id="orderRowQuantity" style="display: flex; justify-content: space-evenly;">
                 <form th:action="@{/orders/deleteProd}" method="post">
-                    <input type="hidden" name="numbOL" th:value="${orderline.getNro()}">
+                    <input type="hidden" name="numbOL" th:value="${orderline.getNumber()}">
                     <input type="hidden" name="codOrder" th:value="${orderline.getOrder().getCod()}">
                     <button type="submit" class="btn btn-outline-danger btnSubs">-</button>
                 </form>
                 <p th:text="${orderline.getQuantityProds()}"></p>
                 <form th:action="@{/orders/addProd}" method="post">
-                    <input type="hidden" name="numbOL" th:value="${orderline.getNro()}">
+                    <input type="hidden" name="numbOL" th:value="${orderline.getNumber()}">
                     <input type="hidden" name="codOrder" th:value="${orderline.getOrder().getCod()}">
                     <button class="btn btn-outline-info btnAdd" type="submit">+</button>
                 </form>

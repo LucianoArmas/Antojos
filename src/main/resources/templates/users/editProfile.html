@@ -10,17 +10,17 @@
         <form th:action="@{/users/editProfile}" th:object="${user}" method="post" class="editProfile-form forms" id="formEditProfile" style="display: grid;">
             <h2>Edit your profile</h2>
             <label for="editName" style="margin-top: 1rem;">Name</label>
-            <input type="text" th:field="*{name}" th:value="${user.name}" name="name" id="editName"/>
+            <input type="text" th:field="*{name}" th:value="${user.name}" name="name" id="editName" style="color: black;"/>
 
             <label for="editLastname" style="margin-top: 1rem;">Lastname</label>
-            <input type="text" th:field="*{lastName}" th:value="${user.lastName}" name="lastname" id="editLastname"/>
+            <input type="text" th:field="*{lastName}" th:value="${user.lastName}" name="lastname" id="editLastname" style="color: black;"/>
 
             <label for="editEmail" style="margin-top: 1rem;">Email</label>
-            <input type="text" th:field="*{email}" th:value="${user.email}" name="email" id="editEmail"/>
+            <input type="text" th:field="*{email}" th:value="${user.email}" name="email" id="editEmail" style="color: black;"/>
 
             <div th:if="${session.flag_canEditPass}" style="display: grid;">
                 <label for="editPassword" style="margin-top: 1rem;">New password</label>
-                <input type="password" th:field="*{userPass}" name="newPassword" id="editPassword">
+                <input type="password" th:field="*{userPass}" name="newPassword" id="editPassword" style="color: black;">
             </div>
 
             <!-- Button trigger modal -->
@@ -55,7 +55,7 @@
             <div class="modal-body">
                 <form th:action="@{/users/editPass}" method="post">
                     <label for="verifyPass">You have to enter your actual password to verify yourself</label>
-                    <input type="password" name="pass" id="verifyPass">
+                    <input type="password" name="pass" id="verifyPass" style="color: black;">
 
 <!--                    <input type="text" name="dni" th:value="${user.dni}" hidden="hidden">-->
                     <input type="hidden" name="dni" th:value="${user.dni}">

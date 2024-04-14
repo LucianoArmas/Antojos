@@ -135,13 +135,14 @@ public class OrderController {
       if (Objects.equals(verifier.verifyRole(session), Role.USER)){
         Order order = orderService.getOrderByCod(orderCod);
         boolean flag_StockAccepted = true;
-        Product prodStockNoAccepted=null;
+        Product prodStockNoAccepted=null; //CREO Q TENDRIA Q ELIMINAR ESTO
 
         for (OrderLine ol: order.getOrderLineList()) {
           if(orderService.verifyProdStock(ol.getProduct(), ol.getQuantityProds())){
             orderService.updateProdStock(ol.getProduct().getId(), (ol.getProduct().getStock() - ol.getQuantityProds()));
           }else{
             flag_StockAccepted = false;
+            //ESTO DE ABAJO TMB DEBERIA ELIMINAR CREO
             prodStockNoAccepted = ol.getProduct(); //AUN NO SE COMO IMPLEMENTARLO - XQ DIRECTAMENTE NO PASA X EL FALSO, XQ SI VE Q NO HAY STOCK NO TE DEJA PONER EL PROD EN EL CART
             break;
           }
@@ -151,7 +152,7 @@ public class OrderController {
           orderService.acceptOrder(order, session);
           return "redirect:/";
         }else{
-          model.addAttribute("errorProdStock", prodStockNoAccepted);
+          model.addAttribute("errorProdStock", prodStockNoAccepted); //Y ESTO TM DEBERIA ELIMINAR
           return "/order/orderLines";
         }
 
@@ -360,42 +361,6 @@ public String cancelOrder(@RequestParam Long cod, HttpSession session){
       return "/users/login";
     }
   }
-
-
-
-
-//  @GetMapping("/list")
-//  public String listShops(Model model){
-//    List<Order> shops = orderService.getAllOrders();
-//    model.addAttribute("orders", shops);
-//    return "shoppings/list";
-//  }
-//
-//
-//
-//  @GetMapping("/add")
-//  public String addShopForm(Model model){
-//    model.addAttribute("order", new Order());
-//    return "shoppings/add";
-//  }
-//  @PostMapping("/add")
-//  public String addShop(@ModelAttribute Order shop){
-//    orderService.addOrder(shop);
-//    return "redirect:/shoppings/list";
-//  }
-//
-//
-//  @GetMapping("/edit/{cod}")
-//  public String editShopForm(@PathVariable Long cod, Model model){
-//    Order shop = orderService.getOrderByCod(cod);
-//    model.addAttribute("order", shop);
-//    return "shoppings/edit";
-//  }
-//  @PostMapping("/edit/{cod}")
-//  public String editShop(@PathVariable Long cod, @ModelAttribute Order order){
-//    orderService.updateShopping(order);
-//    return "redirect:/shoppings/list";
-//  }
 
 
 
