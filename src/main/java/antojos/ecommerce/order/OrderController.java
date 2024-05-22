@@ -1,6 +1,8 @@
 package antojos.ecommerce.order;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -240,10 +242,10 @@ public String getOrderListAdmin(Model model, HttpSession session){
 
 
 
-private Date formatter(String stringToDate){
-  DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-  LocalDate date = LocalDate.parse(stringToDate, dateFormatter);
-  return java.sql.Date.valueOf(date);
+private Timestamp formatter(String stringToDate){
+  DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+  LocalDateTime date = LocalDateTime.parse(stringToDate, dateFormatter);
+  return java.sql.Timestamp.valueOf((date));
 }
 
 @GetMapping("/search")
@@ -253,24 +255,24 @@ public String searchOrder(HttpSession session,Model model, @RequestParam("userDn
 
   if (verifier.verifyToken(tokenInSession,dniUserInSession)){
     if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
-      User user = null;
-      List<Order> orderList = null;
-      Date orderDateFrom;
-      Date orderDateTo;
+      User user;
+      List<Order> orderList;
+      Timestamp orderDateFrom;
+      Timestamp orderDateTo;
 
       if (dateFrom.isBlank()){
-        orderDateFrom = formatter("2000-01-01");
+        orderDateFrom = formatter("2000-01-01 00:00:00");
       }else {
-        orderDateFrom = formatter(dateFrom);
+        orderDateFrom = formatter(dateFrom+" 00:00:00");
       }
-
 
       if (dateTo.isBlank()){
-        LocalDate today = (LocalDate.now());
-        orderDateTo = java.sql.Date.valueOf(today);
+        String today = (LocalDate.now()).toString();
+        orderDateTo = formatter(today+" 23:59:59");
       }else {
-        orderDateTo = formatter(dateTo);
+        orderDateTo = formatter(dateTo+" 23:59:59");
       }
+
 
 
       if (userDni.isBlank()){

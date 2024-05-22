@@ -69,13 +69,13 @@
                                     <form th:action="@{/users/editUser}" method="post" class="editUser-form forms" id="formEditUser" style="display: grid;">
 
                                         <label for="editName" style="margin-top: 1rem;">Name</label>
-                                        <input type="text"  th:value="${user.name}" name="name" id="editName"/>
+                                        <input type="text"  th:value="${user.name}" name="name" id="editName" style="color: black;"/>
 
                                         <label for="editLastname" style="margin-top: 1rem;">Lastname</label>
-                                        <input type="text" th:value="${user.lastName}" name="lastname" id="editLastname"/>
+                                        <input type="text" th:value="${user.lastName}" name="lastname" id="editLastname" style="color: black;"/>
 
                                         <label for="editEmail" style="margin-top: 1rem;">Email</label>
-                                        <input type="email" th:value="${user.email}" name="email" id="editEmail"/>
+                                        <input type="email" th:value="${user.email}" name="email" id="editEmail" style="color: black;"/>
 
                                         <label for="editRole" style="margin-top: 1rem;">Role</label>
                                         <select class="form-select form-select-sm" aria-label="Small select example" id="editRole" name="role">

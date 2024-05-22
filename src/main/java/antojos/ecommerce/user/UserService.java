@@ -32,6 +32,7 @@ public class UserService {
     return userList;
   }
 
+
   public User getUserByDni(String dni){
     return userRepository.findById(dni).orElse(null);
   }

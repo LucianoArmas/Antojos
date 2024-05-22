@@ -1,8 +1,11 @@
 body{
     font-family: "Roboto", sans-serif;
+    font-style: normal;
     background: #2c374b;
     color: whitesmoke;
 }
+
+
 
 .CartBtn {
     border: 2px solid rgb(255, 208, 0);
@@ -81,6 +84,10 @@ body{
     align-items: center;
 }
 
+#subTitleFood h2, #subTitleDrink h2{
+    font-size: 20px;
+}
+
 .sideMenu{
     height: 100%;
 }
@@ -92,6 +99,7 @@ body{
 }
 
 .prodContainer h1  {
+    font-size: 24px;
     margin-left:30px;
     margin-top:20px;
 }
@@ -102,7 +110,7 @@ body{
 }
 
 #foodContainer, #drinkContainer {
-    grid-auto-rows: 30rem;
+    grid-auto-rows: 25rem;
     grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
 }
 

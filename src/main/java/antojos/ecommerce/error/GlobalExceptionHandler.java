@@ -3,6 +3,7 @@ package antojos.ecommerce.error;
 import io.jsonwebtoken.MalformedJwtException;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,6 +58,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     model.addAttribute("error", "Invalid , error: " +e);
     return "/users/login";
   }
+
+
+//  BadCredentialsException
+  @ExceptionHandler(BadCredentialsException.class)
+  public ModelAndView handleBadCredentials(BadCredentialsException e){
+    ModelAndView modelAndView = new ModelAndView("errors/error");
+    modelAndView.addObject("errorMessage", "Invalid credentials: "+ e);
+    return modelAndView;
+  }
+
 
 
   @ExceptionHandler(Exception.class)

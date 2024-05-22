@@ -37,16 +37,16 @@
                     <form th:action="@{/products/newProd}" method="post" th:object="${product}" class="newProd-form forms" id="formNewProd" style="display: grid;" enctype="multipart/form-data">
 
                         <label for="editName" style="margin-top: 1rem;">Name</label>
-                        <input type="text"  th:field="*{name}" name="name" id="editName"/>
+                        <input type="text"  th:field="*{name}" name="name" id="editName" style="color: black;"/>
 
                         <label for="editDesc" style="margin-top: 1rem;">Description</label>
-                        <input type="text" th:field="*{description}" name="desc" id="editDesc"/>
+                        <input type="text" th:field="*{description}" name="desc" id="editDesc" style="color: black;"/>
 
                         <label for="editPrice" style="margin-top: 1rem;">Price</label>
-                        <input type="number" th:field="*{price}" step="any" name="price" id="editPrice"/>
+                        <input type="number" th:field="*{price}" step="any" name="price" id="editPrice" style="color: black;"/>
 
                         <label for="editStock" style="margin-top: 1rem;">Stock</label>
-                        <input type="number" th:field="*{stock}" name="stock" id="editStock"/>
+                        <input type="number" th:field="*{stock}" name="stock" id="editStock" style="color: black;"/>
 
                         <label for="editType" style="margin-top: 1rem;">Type</label>
                         <select class="form-select form-select-sm" aria-label="Small select example" name="editType" id="editType">
@@ -58,12 +58,12 @@
 
                         <div id="foodInput" >
                             <label for="editAmountPeople" style="margin-top: 1rem;">Amount of people can eat</label>
-                            <input type="number" name="amountPeople" id="editAmountPeople" th:value="0"/>
+                            <input type="number" name="amountPeople" id="editAmountPeople" th:value="0" style="color: black;"/>
                         </div>
 
                         <div id="drinkInput" >
                             <label for="editMililts" style="margin-top: 1rem;">Amount of liters</label>
-                            <input type="number" name="lts" id="editMililts" step="any" th:value="0"/>
+                            <input type="number" name="lts" id="editMililts" step="any" th:value="0" style="color: black;"/>
                         </div>
 
                         <label for="imageProd" style="margin-top: 1rem;">Image of product</label>
@@ -179,19 +179,19 @@
                                         <form th:action="@{/foods/edit}" method="post" class="editFood-form forms" id="formEditFood" style="display: grid;">
 
                                             <label for="editNameFood" style="margin-top: 1rem;">Name</label>
-                                            <input type="text"  th:value="${food.name}" name="name" id="editNameFood"/>
+                                            <input type="text"  th:value="${food.name}" name="name" id="editNameFood" style="color: black;"/>
 
                                             <label for="editDescFood" style="margin-top: 1rem;">Description</label>
-                                            <input type="text" th:value="${food.description}" name="desc" id="editDescFood"/>
+                                            <input type="text" th:value="${food.description}" name="desc" id="editDescFood" style="color: black;"/>
 
                                             <label for="editPriceFood" style="margin-top: 1rem;">Price</label>
-                                            <input type="number" th:value="${food.price}" step="any" name="price" id="editPriceFood"/>
+                                            <input type="number" th:value="${food.price}" step="any" name="price" id="editPriceFood" style="color: black;"/>
 
                                             <label for="editStockFood" style="margin-top: 1rem;">Stock</label>
-                                            <input type="number" th:value="${food.stock}" name="stock" id="editStockFood"/>
+                                            <input type="number" th:value="${food.stock}" name="stock" id="editStockFood" style="color: black;"/>
 
                                             <label for="editAmountPeopleFood" style="margin-top: 1rem;">Amount of people can eat</label>
-                                            <input type="number" th:value="${food.amountPeopleEat}" name="amountPeople" id="editAmountPeopleFood"/>
+                                            <input type="number" th:value="${food.amountPeopleEat}" name="amountPeople" id="editAmountPeopleFood" style="color: black;"/>
 
                                             <input th:value="${food.id}" type="hidden" name="id">
 
@@ -285,19 +285,19 @@
                                         <form th:action="@{/drinks/edit}" method="post" class="editDrink-form forms" id="formEditDrink" style="display: grid;">
 
                                             <label for="editNameDrink" style="margin-top: 1rem;">Name</label>
-                                            <input type="text"  th:value="${drink.name}" name="name" id="editNameDrink"/>
+                                            <input type="text"  th:value="${drink.name}" name="name" id="editNameDrink" style="color: black;"/>
 
                                             <label for="editDescDrink" style="margin-top: 1rem;">Description</label>
-                                            <input type="text" th:value="${drink.description}" name="desc" id="editDescDrink"/>
+                                            <input type="text" th:value="${drink.description}" name="desc" id="editDescDrink" style="color: black;"/>
 
                                             <label for="editPriceDrink" style="margin-top: 1rem;">Price</label>
-                                            <input type="number" th:value="${drink.price}" step="any" name="price" id="editPriceDrink"/>
+                                            <input type="number" th:value="${drink.price}" step="any" name="price" id="editPriceDrink" style="color: black;"/>
 
                                             <label for="editStockDrink" style="margin-top: 1rem;">Stock</label>
-                                            <input type="number" th:value="${drink.stock}" name="stock" id="editStockDrink"/>
+                                            <input type="number" th:value="${drink.stock}" name="stock" id="editStockDrink" style="color: black;"/>
 
                                             <label for="editLtsDrink" style="margin-top: 1rem;">Amount of liters</label>
-                                            <input type="number" th:value="${drink.lts}" name="lts" id="editLtsDrink"/>
+                                            <input type="number" th:value="${drink.lts}" name="lts" id="editLtsDrink" style="color: black;"/>
 
                                             <input th:value="${drink.id}" type="hidden" name="id">
 

@@ -10,7 +10,7 @@
         <div class="card" style="width: 100vh; height: 50vh; display: grid; margin-top: 10vh;">
             <img th:src="@{'/imgs/'+${productSelected.name}+'.png'}" class="card-img-top" th:alt="${productSelected.name}" style="height: fit-content; max-width: 9rem; max-height: 18rem; align-self: center; justify-self: center;">
             <div class="card-body" style="align-self: end; justify-self: center; padding-bottom: 30px; width: 90%; max-height: 240px">
-                <h5 class="card-title" th:text="${productSelected.name}" ></h5>
+                <h3 class="card-title" ><b th:text="${productSelected.name}" ></b> </h3>
                 <p class="card-text" th:text="${productSelected.description}"></p>
                 <p th:if="${(productSelected.getType() == 'food')}" class="card-text" th:text="'Amount of people can eat: '+${productSelected.amountPeopleEat}"></p>
                 <p th:if="${(productSelected.getType() == 'drink')}" class="card-text" th:text="${productSelected.lts}+'lts'"></p>
@@ -31,7 +31,7 @@
 
 
                     <div th:unless="${session.user}">
-                        <form th:action="@{/register}" method="get">
+                        <form th:action="@{/login}" method="get">
                             <input type="hidden" name="id" th:value="${productSelected.id}">
                             <button class="CartBtn btn" type="submit">
                             <span class="IconContainer">
