@@ -253,7 +253,7 @@ public class ProductController {
 
 
 
-  //MEPA Q NO SE USA
+  //MEPA Q NO SE USA, ASI QUE LO PODRIA ELIMINAR
   @GetMapping("/delete/{id}")
   public String deleteProd(@PathVariable Long id, HttpSession session){
     String tokenInSession = (String) session.getAttribute("token");

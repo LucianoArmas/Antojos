@@ -82,24 +82,25 @@ public class DrinkController {
 
 
 
-  @GetMapping("/list")
-  public String listDrinks(Model model){
-    List<Drink> drinks = drinkService.getAllDrinks();
-    model.addAttribute("drinks", drinks);
-    return "drinks/list";
-  }
-
-
-  @GetMapping("/add")
-  public String addDrinkForm(Model model){
-    model.addAttribute("drink", new Drink());
-    return "drinks/add";
-  }
-  @PostMapping("/add")
-  public String addDrink(@ModelAttribute Drink drink){
-    drinkService.addDrink(drink);
-    return "redirect:/drinks/list";
-  }
+  //CREO Q PUEDO ELIMINAR ESTOS METODOS DE ABAJO
+//  @GetMapping("/list")
+//  public String listDrinks(Model model){
+//    List<Drink> drinks = drinkService.getAllDrinks();
+//    model.addAttribute("drinks", drinks);
+//    return "drinks/list";
+//  }
+//
+//
+//  @GetMapping("/add")
+//  public String addDrinkForm(Model model){
+//    model.addAttribute("drink", new Drink());
+//    return "drinks/add";
+//  }
+//  @PostMapping("/add")
+//  public String addDrink(@ModelAttribute Drink drink){
+//    drinkService.addDrink(drink);
+//    return "redirect:/drinks/list";
+//  }
 
 
 }

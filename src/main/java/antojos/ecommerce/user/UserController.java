@@ -27,38 +27,6 @@ public class UserController {
   private PasswordEncoder passwordEncoder;
 
 
-//  @GetMapping("/list")
-//  public String listUsers(Model model, HttpSession session){
-//    User userInSession = (User) session.getAttribute("user");
-//    if (Objects.equals(userInSession.getAccessLvl(), "admin")){
-//      List<User> users = userService.getAllUsersExceptAdmin(userInSession.getDni());
-//      model.addAttribute("users", users);
-//      return "/users/userlist";
-//    }
-//    return "redirect:/";
-//  }
-
-//  private boolean verifyToken(String token, String userDni){
-//    UserDetails userDetails = userDetailsService.loadUserByUsername(userDni);
-//    return jwtService.isTokenValid(token,userDetails);
-//  }
-//
-//  private Role verifyRole(HttpSession session){
-//    User userInSession = (User) session.getAttribute("user");
-//    Role role = null;
-//
-//    if (userInSession.getRole().equals(Role.ADMIN)){
-//      role = Role.ADMIN;
-//    }
-//
-//    if (userInSession.getRole().equals(Role.USER)){
-//      role = Role.USER;
-//    }
-//
-//    return role;
-//
-//  }
-
 
   @GetMapping("/list")
   public String listUsers(Model model, HttpSession session){

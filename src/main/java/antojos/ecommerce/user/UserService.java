@@ -41,15 +41,7 @@ public class UserService {
 
 
 
-
-//  private void encryptPassword(User user){
-//    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//    String encodedPass = encoder.encode(user.getUserPass());
-//    user.setUserPass(encodedPass);
-//  }
-//
   public void addUser(User user){
-//    encryptPassword(user);
     userRepository.save(user);
   }
 

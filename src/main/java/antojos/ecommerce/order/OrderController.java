@@ -42,7 +42,6 @@ public class OrderController {
     if (verifier.verifyToken(tokenInSession,dniUserInSession)){
       if (Objects.equals(verifier.verifyRole(session), Role.USER)){
         Order order = (Order) session.getAttribute("orderPending");
-//    List<OrderLine> orderLineList = orderService.getOrderLinesFromSession(session);
         List<OrderLine> orderLineList = order.getOrderLineList();
 
         model.addAttribute("orderLines",orderLineList );
@@ -115,13 +114,8 @@ public class OrderController {
         orderService.addProdToOrderFromCart(session, order, orderLine);
       }else {
          orderService.deleteProdToOrderFromCart(session, order, orderLine);
-//        orderService.updateProdStock(orderLine.getProduct().getId(), orderLine.getProduct().getStock()+1);
       }
     }
-
-//    if(flag_thereIsStock){
-//      orderService.updateProdStock(orderLine.getProduct().getId(), orderLine.getProduct().getStock()-1);
-//    }
 
     return "/order/orderLines";
   }
@@ -167,16 +161,6 @@ public class OrderController {
 
   }
 
-@GetMapping("ordersAccepted") //MEPA Q LO TENGO Q ELIMINAR A ESTE METODO
-public String getOrdersAccepted(Model model, HttpSession session){
-  User user = (User) session.getAttribute("user");
-
-  List<Order> orderList = orderService.getOrdersByUserAndStatus(user, "accepted");
-
-  model.addAttribute("ordersAccepted", orderList);
-
-  return "ordersAccepted(ELIMINAR-QUIZAS)";
-}
 
 private Map<String, List<Order>> getOrdersMap(List<Order> orderList){
     return orderService.divideOrdersByStatus(orderList);
@@ -223,13 +207,11 @@ public String getOrderListAdmin(Model model, HttpSession session){
       List<Order> ordersCancelled = ordersMap.get("cancelled");
       List<Order> ordersDelivered = ordersMap.get("delivered");
 
-//      List<Order> ordersUserNull = (orderList.stream().collect(Collectors.groupingBy(Order::getUser))).get(null);
 
 
       model.addAttribute("orderListAccepted", ordersAccepted);
       model.addAttribute("orderListCancelled", ordersCancelled);
       model.addAttribute("orderListDelivered", ordersDelivered);
-//      model.addAttribute("orderListUserNull", null);
 
       return "/order/orderListAdmin";
     }else {

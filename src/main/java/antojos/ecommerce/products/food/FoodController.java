@@ -80,25 +80,25 @@ public class FoodController {
 
 
 
-
-  @GetMapping("/list")
-  public String listFoods(Model model){
-    List<Food> foods = foodService.getAllFoods();
-    model.addAttribute("foods", foods);
-    return "foods/list";
-  }
-
-
-  @GetMapping("/add")
-  public String addFoodForm(Model model){
-    model.addAttribute("food", new Food());
-    return "foods/add";
-  }
-  @PostMapping("/add")
-  public String addFood(@ModelAttribute Food food){
-    foodService.addFood(food);
-    return "redirect:/foods/list";
-  }
+  //CREO Q PUEDO ELIMINAR ESTOS METODOS DE ABAJO
+//  @GetMapping("/list")
+//  public String listFoods(Model model){
+//    List<Food> foods = foodService.getAllFoods();
+//    model.addAttribute("foods", foods);
+//    return "foods/list";
+//  }
+//
+//
+//  @GetMapping("/add")
+//  public String addFoodForm(Model model){
+//    model.addAttribute("food", new Food());
+//    return "foods/add";
+//  }
+//  @PostMapping("/add")
+//  public String addFood(@ModelAttribute Food food){
+//    foodService.addFood(food);
+//    return "redirect:/foods/list";
+//  }
 
 
 

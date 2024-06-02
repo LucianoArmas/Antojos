@@ -53,22 +53,4 @@ public class RegisterController{
 
   }
 
-//  @PostMapping
-//  public String getInfoRegisterForm(@ModelAttribute("user") @Valid User user, BindingResult result, Model model){
-//
-//    if (result.hasErrors()) {
-//      return "/users/register";
-//    }
-//
-//    if ((userService.getUserByDni(user.getDni())) != null) {
-//      result.rejectValue("dni", "error.user", "User already exists");
-//      return "/users/register";
-//    }
-//
-//    user.setAccessLvl("client");
-//
-//    userService.addUser(user);
-//
-//    return "redirect:/";
-//  }
 }

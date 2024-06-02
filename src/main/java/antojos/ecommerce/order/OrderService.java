@@ -31,13 +31,6 @@ public class OrderService {
     return orderRepository.findAll();
   }
 
-  //MEPA Q LO TENDRIA Q ELIMINAR
-  public List<Order> getAllByStatus(String status){return orderRepository.findByStatus(status);}
-
-  public List<Order> getByUser(User user){
-    return orderRepository.findByUser(user);
-  }
-
   public Order getByUserAndStatus(User user, String status){return orderRepository.findByUserAndStatus(user, status);}
   public List<Order> getOrdersByUserAndStatus(User user, String status){return orderRepository.findOrdersByUserAndStatus(user,status);}
   public List<Order> getByUserAndDate(User user, Date dateFrom, Date dateTo){
@@ -191,12 +184,6 @@ public class OrderService {
     Order order = (Order) session.getAttribute("orderPending");
     return getOrderLineByOrder(order);
 
-//    Object orderLines = session.getAttribute("orderLines");
-//    if(orderLines instanceof List<?>){
-//      return (List<OrderLine>) orderLines;
-//    }else {
-//      return Collections.emptyList();
-//    }
   }
   public void updateOrderLinesInSessionOrderPending(HttpSession session, List<OrderLine> orderLineList){
     session.setAttribute("orderLineList", orderLineList);

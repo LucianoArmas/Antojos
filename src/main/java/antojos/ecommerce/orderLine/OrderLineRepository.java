@@ -12,6 +12,4 @@ public interface OrderLineRepository extends JpaRepository<OrderLine, Long> {
 
   OrderLine findByNumberAndOrderCod(Long numberOrderLine, Long codeOrder);
 
-//  @Query("SELECT ol FROM OrderLine ol WHERE ol.order = :order AND ol.product = :product")
-//  OrderLine findByProdIdAndOrderCod(@Param("product") Product product, @Param("order") Order order);
 }

@@ -57,10 +57,6 @@ public class Order {
       total = total + orderLine.getSubTotPrice();
     }
     setTotPrice(total);
-//    for (OrderLine ol: orderLineList) {
-//      total = total + ol.getSubTotPrice();
-//    }
-//    setTotPrice(total);
     return total;
   }
 

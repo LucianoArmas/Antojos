@@ -13,9 +13,6 @@ public class FoodService {
     this.foodRepository = foodRepository;
   }
 
-  public List<Food> getAllFoods(){
-    return foodRepository.findAll();
-  }
 
   public Food getFoodById(Long id){
     return foodRepository.findById(id).orElse(null);
