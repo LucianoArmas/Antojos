@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{template.html :: head}"></head>
+<body>
+<header th:replace="~{template.html :: header}"></header>
+<div th:replace="~{template.html :: sideMenu}"></div>
+
+<table class="table table-dark table-striped">
+    <thead>
+    <tr>
+        <th scope="col" style="text-align: center"></th>
+        <th scope="col" style="text-align: center">Product</th>
+        <th scope="col" style="text-align: center">Product´s Price</th>
+        <th scope="col" style="text-align: center">Quantity</th>
+        <th scope="col" style="text-align: center">Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="orderline : ${session.orderLineList}">
+        <td style=""><img th:src="@{'/imgs/'+${orderline.product.name}+'.png'}" th:alt="${orderline.product.name}" style="height: fit-content; max-width: 9rem; max-height: 18rem; align-self: center; justify-self: center;"></td>
+        <td th:text="${orderline.product.name}" style="text-align: center"></td>
+        <td th:text="${orderline.product.price}" style="text-align: center"></td>
+
+        <td style="justify-content: center">
+            <div id="orderRowQuantity" style="display: flex; justify-content: space-evenly;">
+                <form th:action="@{/orders/deleteProd}" method="post">
+                    <input type="hidden" name="numbOL" th:value="${orderline.getNumber()}">
+                    <input type="hidden" name="codOrder" th:value="${orderline.getOrder().getCod()}">
+                    <button type="submit" class="btn btn-outline-danger btnSubs">-</button>
+                </form>
+                <p th:text="${orderline.getQuantityProds()}"></p>
+                <form th:action="@{/orders/addProd}" method="post">
+                    <input type="hidden" name="numbOL" th:value="${orderline.getNumber()}">
+                    <input type="hidden" name="codOrder" th:value="${orderline.getOrder().getCod()}">
+                    <button class="btn btn-outline-info btnAdd" type="submit">+</button>
+                </form>
+            </div>
+        </td>
+        <td th:text="${orderline.getSubTotPrice()}" style="text-align: center"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td style="text-align: center"><b> TOTAL : </b></td>
+        <td></td>
+        <td style="text-align: center" th:text="${session.orderPending.getTotPrice()}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<form th:if="${session.orderPending.getTotPrice()>0}" th:action="@{/orders/acceptOrder/{orderCod}(orderCod=${session.orderPending.getCod()})}" method="post" style="display: flex; flex-direction: row-reverse;">
+    <button class="btn btn-outline-success" type="submit" style="margin-right: 2rem;">Accept Order</button>
+</form>
+
+
+<p th:if="${errorProdStock}" style="color: darkred" th:text="${errorProdStock}"></p>
+
+
+<footer th:replace="~{template.html :: footer}"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+</body>
+</html>

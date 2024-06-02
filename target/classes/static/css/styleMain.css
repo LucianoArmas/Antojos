@@ -1,0 +1,84 @@
+body{
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    background: #2c374b;
+    color: whitesmoke;
+}
+
+
+
+.CartBtn {
+    border: 2px solid rgb(255, 208, 0);
+    font-size: 16px;
+    transition: transform 0.1s ease-in, all 0.08s ease-in;
+    box-shadow: 0 5px 0 rgb(255, 183, 0);
+}
+
+.icon {
+    border-radius: 1px;
+}
+
+
+.CartBtn:hover  {
+    border-color: rgb(255, 183, 0);
+    background: rgb(255, 183, 0);
+    box-shadow: 0 5px 0 rgb(255, 174, 0);
+}
+
+.CartBtn:active{
+    transform: translateY(5px);
+    background: rgb(255, 174, 0);
+    box-shadow: 0 0 0 rgb(255, 174, 0);
+}
+
+
+
+
+#subTitleFood, #subTitleDrink{
+    display: flex;
+    justify-content: space-between;
+    justify-self: center;
+    width: 80%;
+    align-items: center;
+}
+
+#subTitleFood h2, #subTitleDrink h2{
+    font-size: 20px;
+}
+
+.sideMenu{
+    height: 100%;
+}
+.offcanvas-body{
+    height: 100%;
+    display: grid;
+    align-content: space-evenly;
+    justify-content: center;
+}
+
+.prodContainer h1  {
+    font-size: 24px;
+    margin-left:30px;
+    margin-top:20px;
+}
+
+.dropDowns{
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#foodContainer, #drinkContainer {
+    grid-auto-rows: 25rem;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+}
+
+
+@media (max-width: 640px) {
+    #foodContainer, #drinkContainer{
+        grid-auto-rows: 20rem;
+        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    }
+}
+
+
+

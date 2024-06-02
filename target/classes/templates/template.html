@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Antojos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/styleMain.css}">
+    <link rel="stylesheet" th:href="@{/css/styleLogReg.css}">
+    <link rel="shortcut icon" th:href="@{/logos/antojos-favicon-white.png}" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <header th:fragment="header">
+        <nav class="navbar navbar-expand-lg text-center justify-content-center bg-black" style="position: fixed; width: 100%; z-index: 100;">
+
+            <div class="row w-100 align-content-center" style="height: 50px; ">
+
+
+                <div class="col-2 d-flex justify-content-around align-content-center" style="max-height: 50px;">
+                    <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" style="max-width: 50px; max-height: 50px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                        </svg>
+                    </button>
+                    <a class="navbar-brand xl:block hidden" style="color: white; display: grid; align-content: center;" href="/">
+                        <img class="xl:block hidden" th:src="@{/logos/antojosWhite.png}" alt="Antojos" style="max-height: 50px;">
+                    </a>
+                </div>
+
+
+                <div class="sm:grid sm:flex-1 sm:content-center md:col-7 col-6 hidden" style="justify-content: center">
+                    <form th:if="${session.user == null || session.user.getRole().toString() != 'ADMIN'}" class=" d-flex" role="search" style="width: 40rem; justify-content: center" action="/search">
+                        <input name="query" class="lg:w-full w-3/5 form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-primary d-grid align-content-center" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="sm:hidden sm:col-7 grid content-center justify-content-center col-4 block">
+                    <div class="modal fade" id="showSearchBar" tabindex="-1" aria-labelledby="searchModal" aria-hidden="true" style="--bs-modal-bg: #343a40; color: #FFFFFF">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="searchModal"></h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/search" method="GET" id="formSearch">
+                                        <div class="content-center col-7 w-auto d-flex" >
+                                            <input name="query" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                            <button class="btn btn-primary d-grid align-content-center" type="submit">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button title="Search" type="button" class="btn btn-primary d-grid align-content-center" data-bs-toggle="modal" data-bs-target="#showSearchBar" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg>
+                    </button>
+
+
+
+
+                </div>
+
+
+
+
+                <div th:if="${session.user}" class="col-3 d-flex align-content-center dropDowns" style="display: flex; position: relative; right: 0;">
+                    <div class="dropdown-center dropdownCart" th:if="${session.user.getRole().toString() == 'USER'}" style="margin-right: 10px">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shopping-cart" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                <path d="M17 17h-11v-14h-2" />
+                                <path d="M6 5l14 1l-1 7h-13" />
+                            </svg>
+                        </button>
+                        <div th:if="${!session.orderLineList.isEmpty()}" class="dropdown-menu dropdown-menu-dark ">
+                            <table class="table dropdown-item-text">
+                                <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Prod</th>
+                                    <th scope="col">Price</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="ordLine : ${session.orderLineList}">
+                                    <td th:text="${ordLine.getQuantityProds()}+ 'x '"></td>
+                                    <td th:text="${ordLine.product.name}"></td>
+                                    <td th:text="${ordLine.product.price}"></td>
+                                </tr>
+                                <tr class="table-dark">
+                                    <td>Total: </td>
+                                    <td></td>
+                                    <td th:text="${session.orderPending.getTotPrice()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <a class="btn btn-outline-warning" href="/orders/cart" style="display: block; margin: 10px">View Cart</a>
+                        </div>
+                        <div th:if="${session.orderLineList.isEmpty()}" class="dropdown-menu dropdown-menu-dark" >
+                            <p class="dropdown-item-text" style="color: #EF3B3A; text-align: center;" ><b>Empty cart</b></p>
+                        </div>
+                    </div>
+
+
+                   <div class="dropdown dropdownUser">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                                <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><p class="dropdown-item-text" th:text="${session.user.name}+' '+${session.user.lastName}"></p></li>
+                            <li>
+                                <a class="dropdown-item" href="/users/edit">Profile</a>
+                            </li>
+<!--                            <li><a class="dropdown-item" href="#">Cart</a></li>-->
+<!--                            <li><a class="dropdown-item" href="#">Something else here</a></li>-->
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" style="color: #EF3B3A" href="/logout">Log Out</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <div th:unless="${session.user}" class="col-2 d-flex align-content-center dropDowns"></div>
+
+
+            </div>
+        </nav>
+    </header>
+
+    <div th:fragment="sideMenu">
+        <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+            <div class="offcanvas-header d-flex justify-content-end top-0">
+                <button type="button" class="btn-close btn btn-outline-danger" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div th:if="${session.user}" class="sideMenu">
+                <div th:if="${session.user.getRole().toString() == 'ADMIN'}" class="offcanvas-body">
+                    <a class="btn btn-outline-dark xl:hidden block" href="/">Home</a>
+                    <a class="btn btn-outline-dark" href="/users/list">Users</a>
+                    <a class="btn btn-outline-dark" href="/products/prodsList">Products</a>
+                    <a class="btn btn-outline-dark" href="/orders/orderListAdmin">Orders</a>
+                    <a class="btn btn-outline-danger" href="/logout">Log Out</a>
+                </div>
+                <div th:unless="${session.user.getRole().toString() == 'ADMIN'}" class="offcanvas-body">
+<!--                    <a class="btn btn-outline-dark" href="/">Directions</a>-->
+<!--                    <a class="btn btn-outline-dark" href="/orders/ordersAccepted">Orders</a> ESTE ES EL LISTADO DE LAS ORDENES ACEPTADAS-->
+                    <a class="btn btn-outline-dark xl:hidden block" href="/">Home</a>
+                    <a class="btn btn-outline-dark" href="/orders/orderList">Orders</a>
+                    <a class="btn btn-outline-danger" href="/logout">Log Out</a>
+                </div>
+            </div>
+            <div th:unless="${session.user}" class="sideMenu">
+                <div class="offcanvas-body">
+                    <a class="btn btn-outline-dark xl:hidden block" href="/">Home</a>
+                    <a class="btn btn-outline-dark" href="/register">Register</a>
+                    <a class="btn btn-outline-dark" href="/login">Log In</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    
+    <div class="container"></div>
+
+    <footer th:fragment="footer" class="bg-black bg-opacity-75 justify-content-center" style="color: white; display: flow-root; margin-top: 10rem;">
+        <hr>
+        <div class="d-flex justify-content-center" style="margin-top: 1rem;">
+            <a href="https://www.linkedin.com/in/luciano-armas-167974206/" target="_blank" style="padding-right: 1em;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-linkedin" viewBox="0 0 16 16">
+                    <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401m-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4"/>
+                </svg>
+            </a>
+            <a href="https://github.com/LucianoArmas/antojos" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-github" viewBox="0 0 16 16">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+                </svg>
+            </a>
+        </div>
+        <p style="text-align: center;" class="opacity-50">&copy; 2023 Luciano Armas</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

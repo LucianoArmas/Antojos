@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{template.html :: head}"></head>
+<body>
+
+<header th:replace="~{template.html :: header}"></header>
+
+<div th:replace="~{template.html :: sideMenu}"></div>
+
+<div class="mainContainer" th:if="${session.user}">
+    <div class="adminContainer" th:if="${session.user.getRole().toString() == 'ADMIN'}">
+        <p style="text-align: center; margin-top: 1rem;"> WELCOME ADMIN <b th:text="${session.user.name}"></b></p>
+        <div id="btnsAdmin" style="display: flex; justify-content: space-evenly; margin-top: 3rem;">
+            <a class="btn btn-light" href="/users/list">Users</a>
+            <a class="btn btn-light" href="/products/prodsList">Products</a>
+            <a class="btn btn-light" href="/orders/orderListAdmin">Orders</a>
+        </div>
+    </div>
+</div>
+
+
+<div th:if="${(session.user == null) || (session.user.getRole().toString() != 'ADMIN')}" class="prodContainer" style="display: grid; padding-top: 70px;" th:fragment="prodsCli">
+<h1>PRODUCTS</h1>
+    <div id="subTitleFood" style="display: flex; justify-content: space-between; align-items: center; justify-self: center; width: 80%;" th:if="${foods.size() != 0}">
+        <h2 style="padding-bottom: 10px; padding-top: 10px">FOODS</h2>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Filter
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" th:href="@{/filterFood(filter='')}">Default</a></li>
+                <li><a class="dropdown-item" th:href="@{/filterFood(filter='alphabetic')}">Alphabetic</a></li>
+                <li><a class="dropdown-item" th:href="@{/filterFood(filter='lowPrice')}">Price: Low to High</a></li>
+                <li><a class="dropdown-item" th:href="@{/filterFood(filter='highPrice')}">Price: High to Low</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="foodContainer" style="display: grid; max-width: 80%; padding-bottom: 20px; justify-self: center; gap: 1rem; ">
+        <div th:each="food : ${foods}" class="card sm:w-72 sm:h-96 h-80 w-40" style=" display: grid">
+            <img th:src="@{'/imgs/'+${food.name}+'.png'}" class="card-img-top sm:max-w-36 sm:max-h-72 max-h-48 max-w-24" th:alt="${food.name}" style="height: fit-content;  align-self: center; justify-self: center;">
+
+            <div class="card-body sm:text-base text-sm" style="align-self: end; justify-self: center; padding-bottom: 30px; width: 90%; max-height: 240px">
+                <h5 class="card-title" th:text="${food.name}" ></h5>
+                <p class="card-text" th:text="${food.description}"></p>
+                <p class="text-primary" th:text="'$'+${food.price}"></p>
+                <div style="display: flex; justify-content: space-between; align-items: center;" id="btns">
+                    <a th:href="@{/details/{id}(id=${food.id})}" class="btn btn-secondary sm:text-base text-xs mr-2">More info</a>
+
+                    <div th:if="${session.user}" id="addToCart">
+                        <form th:if="${food.stock > 0}" th:action="@{/orders/addToCart}" method="post">
+                            <input type="hidden" name="id" th:value="${food.id}">
+                            <button class="CartBtn btn" type="submit">
+                            <span class="IconContainer">
+                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart-plus">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 19a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M12.5 17h-6.5v-14h-2" />
+                                    <path d="M6 5l14 1l-.86 6.017m-2.64 .983h-10.5" /><path d="M16 19h6" /><path d="M19 16v6" />
+                                </svg>
+                            </span>
+                                <p class="sm:block hidden">Add to Cart</p>
+                            </button>
+                        </form>
+                        <p th:unless="${food.stock > 0}" style="color: #c1121f">No Stock</p>
+                    </div>
+
+
+                    <div th:unless="${session.user}">
+                        <form th:if="${food.stock > 0}" th:action="@{/login}" method="get">
+                            <input type="hidden" name="id" th:value="${food.id}">
+                            <button class="CartBtn btn" type="submit">
+                            <span class="IconContainer">
+                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart-plus">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 19a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M12.5 17h-6.5v-14h-2" />
+                                    <path d="M6 5l14 1l-.86 6.017m-2.64 .983h-10.5" /><path d="M16 19h6" /><path d="M19 16v6" />
+                                </svg>
+                            </span>
+                                <p class="sm:block hidden">Add to Cart</p>
+                            </button>
+                        </form>
+                        <p th:unless="${food.stock > 0}" style="color: #c1121f">No Stock</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div id="subTitleDrink" style="display: flex; justify-content: space-between; align-items: center; justify-self: center; width: 80%; padding-top: 60px;" th:if="${drinks.size() != 0}">
+        <h2 style="padding-bottom: 10px; padding-top: 10px">DRINKS</h2>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Filter
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" th:href="@{/filterDrink(filter='')}">Default</a></li>
+                <li><a class="dropdown-item" th:href="@{/filterDrink(filter='alphabetic')}">Alphabetic</a></li>
+                <li><a class="dropdown-item" th:href="@{/filterDrink(filter='lowPrice')}">Price: Low to High</a></li>
+                <li><a class="dropdown-item" th:href="@{/filterDrink(filter='highPrice')}">Price: High to Low</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="drinkContainer" style="display: grid; max-width: 80%; padding-bottom: 20px; justify-self: center; gap: 1rem; ">
+        <div th:each="drink : ${drinks}" class="card sm:w-72 sm:h-96 h-80 w-40" style="display: grid">
+            <img th:src="@{'/imgs/'+${drink.name}+'.png'}" class="card-img-top sm:max-w-fit sm:max-h-auto max-h-36 max-w-12" th:alt="${drink.name}" style="height: fit-content;  align-self: center; justify-self: center;">
+
+            <div class="card-body sm:text-base text-sm" style="align-self: end; justify-self: center; padding-bottom: 30px; width: 90%; max-height: 240px">
+                <h5 class="card-title" th:text="${drink.name}" ></h5>
+                <p class="card-text" th:text="${drink.description}"></p>
+                <p class="text-primary" th:text="'$'+${drink.price}"></p>
+
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <a th:href="@{/details/{id}(id=${drink.id})}" class="btn btn-secondary sm:text-base text-xs mr-2">More info</a>
+
+                    <div th:if="${session.user}">
+                        <form th:if="${drink.stock > 0}" th:action="@{/orders/addToCart}" method="post">
+                            <input type="hidden" name="id" th:value="${drink.id}">
+                            <button class="CartBtn btn" type="submit">
+                            <span class="IconContainer">
+                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart-plus">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 19a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M12.5 17h-6.5v-14h-2" />
+                                    <path d="M6 5l14 1l-.86 6.017m-2.64 .983h-10.5" /><path d="M16 19h6" /><path d="M19 16v6" />
+                                </svg>
+                            </span>
+                                <p class="sm:block hidden">Add to Cart</p>
+                            </button>
+                        </form>
+                        <p th:unless="${drink.stock > 0}" style="color: #c1121f">No Stock</p>
+                    </div>
+
+
+                    <div th:unless="${session.user}">
+                        <form th:if="${drink.stock > 0}" th:action="@{/login}" method="get">
+                            <input type="hidden" name="id" th:value="${drink.id}">
+                            <button class="CartBtn btn" type="submit">
+                            <span class="IconContainer">
+                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart-plus">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 19a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M12.5 17h-6.5v-14h-2" />
+                                    <path d="M6 5l14 1l-.86 6.017m-2.64 .983h-10.5" /><path d="M16 19h6" /><path d="M19 16v6" />
+                                </svg>
+                            </span>
+                                <p class="sm:block hidden">Add to Cart</p>
+                            </button>
+                        </form>
+                        <p th:unless="${drink.stock > 0}" style="color: #c1121f">No Stock</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 th:if="${(foods.size() == 0)&&(drinks.size() == 0)}" style="color: red"><b>No products found</b></h3>
+
+</div>
+
+<footer th:replace="~{template.html :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+</body>
+</html>
