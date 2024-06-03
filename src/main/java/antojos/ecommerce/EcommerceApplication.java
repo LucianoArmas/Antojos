@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "antojos.ecommerce.repositories")
+//@EnableJpaRepositories(basePackages = "antojos.ecommerce")
 public class EcommerceApplication {
 
 

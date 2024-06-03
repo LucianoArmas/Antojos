@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableJpaRepositories(basePackages = "antojos.ecommerce.repositories")
+//@EnableJpaRepositories(basePackages = "antojos.ecommerce")
 public class ApplicationConfig {
   private final UserRepository userRepository;
 
