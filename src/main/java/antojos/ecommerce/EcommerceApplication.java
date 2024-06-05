@@ -2,11 +2,14 @@ package antojos.ecommerce;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
-@SpringBootApplication
+@SpringBootApplication(
+//				exclude = {ThymeleafAutoConfiguration.class}
+)
 @EnableTransactionManagement
 //@EnableJpaRepositories(basePackages = "antojos.ecommerce")
 public class EcommerceApplication {

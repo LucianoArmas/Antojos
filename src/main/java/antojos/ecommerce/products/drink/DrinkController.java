@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping("/drinks")
+@RequestMapping("drinks")//
 public class DrinkController {
   private DrinkService drinkService;
   private Verifier verifier;
@@ -38,12 +38,12 @@ public class DrinkController {
         drink.setStock(stock);
         drink.setLts(lts);
         drinkService.updateDrink(drink);
-        return "redirect:/products/prodsList";
+        return "redirect:products/prodsList";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 
@@ -68,12 +68,12 @@ public class DrinkController {
       if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
         drinkService.deleteDrink(id);
         deleteImgDrink(id);
-        return "redirect:/products/prodsList";
+        return "redirect:products/prodsList";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 

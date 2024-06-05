@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping("/foods")
+@RequestMapping("foods")//
 public class FoodController {
   private FoodService foodService;
   private Verifier verifier;
@@ -38,12 +38,12 @@ public class FoodController {
         food.setStock(stock);
         food.setAmountPeopleEat(amountPeople);
         foodService.updateFood(food);
-        return "redirect:/products/prodsList";
+        return "redirect:products/prodsList";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
 
   }
@@ -69,12 +69,12 @@ public class FoodController {
       if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
         deleteImgFood(id);
         foodService.deleteFood(id);
-        return "redirect:/products/prodsList";
+        return "redirect:products/prodsList";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 

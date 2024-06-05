@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping("/orders")
+@RequestMapping("orders")//
 public class OrderController {
   private OrderService orderService;
   private ProductService productService;
@@ -45,12 +45,12 @@ public class OrderController {
         List<OrderLine> orderLineList = order.getOrderLineList();
 
         model.addAttribute("orderLines",orderLineList );
-        return "/order/orderLines";
+        return "order/orderLines";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 
@@ -64,12 +64,12 @@ public class OrderController {
         Product product = productService.getProductById(id);
         Order order = (Order) session.getAttribute("orderPending");
         orderService.addProductToOrder(product, order, session);
-        return "redirect:/";
+        return "redirect:";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 
@@ -82,10 +82,10 @@ public class OrderController {
       if (Objects.equals(verifier.verifyRole(session), Role.USER)){
         return processOrderProd(numbOL, codOrder, session, true);
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 
@@ -98,10 +98,10 @@ public class OrderController {
       if (Objects.equals(verifier.verifyRole(session), Role.USER)){
         return processOrderProd(numbOL, codOrder, session, false);
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 
@@ -117,7 +117,7 @@ public class OrderController {
       }
     }
 
-    return "/order/orderLines";
+    return "order/orderLines";//
   }
 
 
@@ -146,17 +146,17 @@ public class OrderController {
 
         if(flag_StockAccepted){
           orderService.acceptOrder(order, session);
-          return "redirect:/";
+          return "redirect:";//
         }else{
           model.addAttribute("errorProdStock", prodStockNoAccepted); //Y ESTO TM DEBERIA ELIMINAR
-          return "/order/orderLines";
+          return "order/orderLines";//
         }
 
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
 
   }
@@ -183,12 +183,12 @@ public String getOrderList(Model model, HttpSession session){
       model.addAttribute("ordersCancelled", orderListCancelled);
       model.addAttribute("ordersDelivered", orderListDelivered);
 
-      return "/order/orderList";
+      return "order/orderList";//
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }else {
-    return "/users/login";
+    return "users/login";//
   }
 }
 
@@ -213,12 +213,12 @@ public String getOrderListAdmin(Model model, HttpSession session){
       model.addAttribute("orderListCancelled", ordersCancelled);
       model.addAttribute("orderListDelivered", ordersDelivered);
 
-      return "/order/orderListAdmin";
+      return "order/orderListAdmin";//
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }else {
-    return "/users/login";
+    return "users/login";//
   }
 }
 
@@ -276,12 +276,12 @@ public String searchOrder(HttpSession session,Model model, @RequestParam("userDn
       model.addAttribute("orderListCancelled", ordersCancelled);
       model.addAttribute("orderListDelivered", ordersDelivered);
 
-      return "/order/orderListAdmin";
+      return "order/orderListAdmin";//
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }else {
-    return "/users/login";
+    return "users/login";//
   }
 }
 
@@ -300,12 +300,12 @@ public String modOrderStatusAdmin(@RequestParam Long cod, @RequestParam String o
       Order order = orderService.getOrderByCod(cod);
       orderService.updateOrder(order, orderStatus);
 
-      return "redirect:/orders/orderListAdmin";
+      return "redirect:orders/orderListAdmin";//
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }else {
-    return "/users/login";
+    return "users/login";//
   }
 }
 
@@ -320,12 +320,12 @@ public String cancelOrder(@RequestParam Long cod, HttpSession session){
   if (verifier.verifyToken(tokenInSession,dniUserInSession)){
     if (Objects.equals(verifier.verifyRole(session), Role.USER)){
       orderService.cancelOrder(cod);
-      return "redirect:/orders/orderList";
+      return "redirect:orders/orderList";//
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }else {
-    return "/users/login";
+    return "users/login";//
   }
 }
 
@@ -337,12 +337,12 @@ public String cancelOrder(@RequestParam Long cod, HttpSession session){
     if (verifier.verifyToken(tokenInSession,dniUserInSession)){
       if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
         orderService.deleteOrder(cod);
-        return "redirect:/orders/orderListAdmin";
+        return "redirect:orders/orderListAdmin";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 

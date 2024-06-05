@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping({"/","/products"})
+@RequestMapping({"","products"})//
 public class ProductController {
   private ProductService productService;
   private FoodService foodService;
@@ -30,12 +30,12 @@ public class ProductController {
 
 
 
-  @GetMapping("")
+  @GetMapping({"","/"})
   public String index(Model model){
     Map<String, List<Product>> productsByType = productService.getProducts("");
     model.addAttribute("foods", productsByType.getOrDefault("food", new ArrayList<>()));
     model.addAttribute("drinks", productsByType.getOrDefault("drink", new ArrayList<>()));
-    return "/products/index";
+    return "products/index";//
   }
 
   @GetMapping("/details/{id}")
@@ -51,7 +51,7 @@ public class ProductController {
     Map<String, List<Product>> productsByType = productService.getProducts(query);
     model.addAttribute("foods", productsByType.getOrDefault("food", new ArrayList<>()));
     model.addAttribute("drinks", productsByType.getOrDefault("drink", new ArrayList<>()));
-    return "/products/index";
+    return "products/index";//
   }
 
   @GetMapping("/searchAdmin")
@@ -67,12 +67,12 @@ public class ProductController {
         model.addAttribute("foods", productsByType.getOrDefault("food", new ArrayList<>()));
         model.addAttribute("drinks", productsByType.getOrDefault("drink", new ArrayList<>()));
 
-        return "/products/prodlist";
+        return "products/prodlist";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 
@@ -132,7 +132,7 @@ public class ProductController {
 
     filterProducts(filter,filterDrink,model);
 
-    return "/products/index";
+    return "products/index";//
   }
 
   @GetMapping("/filterDrink")
@@ -148,7 +148,7 @@ public class ProductController {
 
     filterProducts(filterFood, filter, model);
 
-    return "/products/index";
+    return "products/index";//
   }
 
 
@@ -159,7 +159,7 @@ public class ProductController {
       session.removeAttribute("prodExist_error");
       session.setAttribute("error_showed", false);
     }
-    return "redirect:/products/prodsList";
+    return "redirect:products/prodsList";//
   }
 
   @GetMapping("/prodsList")
@@ -176,12 +176,12 @@ public class ProductController {
         model.addAttribute("drinks", productsByType.getOrDefault("drink", new ArrayList<>()));
 //    resetErrorShowed(session);
 //    session.setAttribute("error_showed", false);
-        return "/products/prodlist";
+        return "products/prodlist";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 
@@ -241,12 +241,12 @@ public class ProductController {
           session.setAttribute("error_showed", true);
         }
 
-        return "redirect:/products/prodsList";
+        return "redirect:products/prodsList";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 
@@ -262,12 +262,12 @@ public class ProductController {
     if (verifier.verifyToken(tokenInSession,dniUserInSession)){
       if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
         productService.deleteProduct(id);
-        return "redirect:/products/list";
+        return "redirect:products/list";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 

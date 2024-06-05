@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping("/users")
+@RequestMapping("users")//
 public class UserController {
   private UserService userService;
   private Verifier verifier;
@@ -39,13 +39,13 @@ public class UserController {
 
         List<User> users = userService.getAllUsersExceptAdmin(userInSession.getDni());
         model.addAttribute("users", users);
-        return "/users/userlist";
+        return "users/userlist";//
 
       } else{
-        return "/users/login";
+        return "users/login";//
       }
     }else{
-      return "/users/login";
+      return "users/login";//
     }
 
   }
@@ -66,13 +66,13 @@ public class UserController {
         }else {
           model.addAttribute("userNotFounded", "The user: " + query + " not exists");
         }
-        return "/users/userlist";
+        return "users/userlist";//
 
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
 
 
@@ -90,7 +90,7 @@ public class UserController {
   @PostMapping("/add") //MEPA Q NO SE USA
   public String addUser(@ModelAttribute User user){
     userService.addUser(user);
-    return "redirect:/users/list";
+    return "redirect:users/list";//
   }
 
   private boolean resetFlagEditPass(HttpSession session){
@@ -118,12 +118,12 @@ public class UserController {
         boolean flagEditPassReset = resetFlagEditPass(session);
         session.setAttribute("flag_canEditPass", flagEditPassReset);
 
-        return "/users/editProfile";
+        return "users/editProfile";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
 
 
@@ -138,12 +138,12 @@ public class UserController {
       if (verifier.verifyRole(session) != null){
         userService.updateUser(newUser,dni, false);
         session.setAttribute("flag_canEditPass", false);
-        return "/users/editProfile";
+        return "users/editProfile";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 
@@ -169,12 +169,12 @@ public class UserController {
         }
 
         model.addAttribute("user", userSession);
-        return "/users/editProfile";
+        return "users/editProfile";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 
@@ -194,12 +194,12 @@ public class UserController {
         userEdit.setRole(role);
         userEdit.setEmail(email);
         userService.updateUser(userEdit, dni, true);
-        return "redirect:/users/list";
+        return "redirect:users/list";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
   }
 
@@ -212,12 +212,12 @@ public class UserController {
     if (verifier.verifyToken(tokenInSession,dniUserInSession)){
       if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
         userService.deleteUser(dni);
-        return "redirect:/users/list";
+        return "redirect:users/list";//
       }else {
-        return "/users/login";
+        return "users/login";//
       }
     }else {
-      return "/users/login";
+      return "users/login";//
     }
 
   }

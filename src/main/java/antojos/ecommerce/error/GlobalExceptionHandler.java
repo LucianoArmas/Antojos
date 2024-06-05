@@ -56,7 +56,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(NullPointerException.class)
   public String handleNullPointer(NullPointerException e, Model model){
     model.addAttribute("error", "Invalid , error: " +e);
-    return "/users/login";
+    return "users/login";//
   }
 
 

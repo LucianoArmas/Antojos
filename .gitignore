@@ -29,4 +29,8 @@ build/
 
 ### VS Code ###
 .vscode/
-src/main/resources/application.properties
+!src/main/resources/application.properties
+
+
+### MySQL ###
+data/mysql.sock

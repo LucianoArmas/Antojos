@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/login")
+@RequestMapping("login")//
 @RequiredArgsConstructor
 public class LoginController {
 
@@ -36,7 +36,7 @@ public class LoginController {
 
   @GetMapping
   public String showLoginForm(){
-    return "/users/login";
+    return "users/login";//
   }
 
   private Order setOrderSession(User user){
@@ -81,13 +81,13 @@ public class LoginController {
 
       }else{
         model.addAttribute("error", "Invalid user");
-        return "/users/login";
+        return "users/login";//
       }
 
 
     }else{
       model.addAttribute("error", "Invalid user");
-      return "/users/login";
+      return "users/login";//
     }
   }
 
