@@ -70,6 +70,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
 
+
+
+
   @ExceptionHandler(Exception.class)
   public ModelAndView handleException(Exception e){
     ModelAndView modelAndView = new ModelAndView("errors/error");

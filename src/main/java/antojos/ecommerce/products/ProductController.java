@@ -159,7 +159,7 @@ public class ProductController {
       session.removeAttribute("prodExist_error");
       session.setAttribute("error_showed", false);
     }
-    return "redirect:products/prodsList";//
+    return "redirect:prodsList";//
   }
 
   @GetMapping("/prodsList")
@@ -193,17 +193,17 @@ public class ProductController {
   private void saveImage(String prodName, MultipartFile img){
     String fileName = prodName+".png";
     String path = "src/main/resources/static/imgs/"+fileName;
-    System.out.println(path);
     try{
       Files.write(Paths.get(path), img.getBytes());
+      System.out.println("xd");
     }catch (IOException e){
       e.printStackTrace();
     }
   }
 
 
-  @PostMapping("/newProd")
   //, @RequestParam("imageProd") MultipartFile img
+  @PostMapping("/newProd")
   public String createNewProd(@ModelAttribute("product") Product product, Model model, HttpSession session, @RequestParam("lts") float lts, @RequestParam("amountPeople") int amountPeople, @RequestParam("editType") String type, @RequestParam("imageProd") MultipartFile img){
     String tokenInSession = (String) session.getAttribute("token");
     String dniUserInSession = ((User) session.getAttribute("user")).getDni();
@@ -241,7 +241,7 @@ public class ProductController {
           session.setAttribute("error_showed", true);
         }
 
-        return "redirect:products/prodsList";//
+        return "redirect:prodsList";//
       }else {
         return "users/login";//
       }

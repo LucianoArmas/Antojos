@@ -89,7 +89,11 @@ public class UserService {
 
       if (flag_editFromAdmin){
         user.setAccessLvl(newUser.getAccessLvl());
-      }else{user.setAccessLvl("client");}
+        user.setRole(newUser.getRole());
+      }else{
+        user.setAccessLvl("client");
+        user.setRole(Role.USER);
+      }
 
       userRepository.save(user);
     }

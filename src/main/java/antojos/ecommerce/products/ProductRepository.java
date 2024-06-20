@@ -14,6 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
   void updateProductStock(@Param("prodID") Long product,@Param("stock") int stock);
 
   List<Product> findByNameContainingIgnoreCase(String name);
+  List<Product> findByNameIgnoreCase(String name);
 
 
 

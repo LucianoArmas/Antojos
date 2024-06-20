@@ -78,8 +78,8 @@
                                         <input type="email" th:value="${user.email}" name="email" id="editEmail" style="color: black;"/>
 
                                         <label for="editRole" style="margin-top: 1rem;">Role</label>
-                                        <select class="form-select form-select-sm" aria-label="Small select example" id="editRole" name="role">
-                                            <option selected hidden th:text="${user.role}"></option>
+                                        <select class="form-select form-select-sm" aria-label="Small select example" id="editRole" name="accessLvl">
+                                            <option selected hidden th:text="${user.accessLvl}"></option>
                                             <option value="client">User</option>
                                             <option value="admin">Admin</option>
                                         </select>

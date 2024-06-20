@@ -64,7 +64,7 @@ public class OrderController {
         Product product = productService.getProductById(id);
         Order order = (Order) session.getAttribute("orderPending");
         orderService.addProductToOrder(product, order, session);
-        return "redirect:";//
+        return "redirect:../products/";//
       }else {
         return "users/login";//
       }
@@ -146,7 +146,7 @@ public class OrderController {
 
         if(flag_StockAccepted){
           orderService.acceptOrder(order, session);
-          return "redirect:";//
+          return "redirect:../../products/";//
         }else{
           model.addAttribute("errorProdStock", prodStockNoAccepted); //Y ESTO TM DEBERIA ELIMINAR
           return "order/orderLines";//
@@ -299,8 +299,7 @@ public String modOrderStatusAdmin(@RequestParam Long cod, @RequestParam String o
     if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
       Order order = orderService.getOrderByCod(cod);
       orderService.updateOrder(order, orderStatus);
-
-      return "redirect:orders/orderListAdmin";//
+      return "redirect:orderListAdmin";//
     }else {
       return "users/login";//
     }
@@ -320,7 +319,7 @@ public String cancelOrder(@RequestParam Long cod, HttpSession session){
   if (verifier.verifyToken(tokenInSession,dniUserInSession)){
     if (Objects.equals(verifier.verifyRole(session), Role.USER)){
       orderService.cancelOrder(cod);
-      return "redirect:orders/orderList";//
+      return "redirect:orderList";//
     }else {
       return "users/login";//
     }
@@ -337,7 +336,7 @@ public String cancelOrder(@RequestParam Long cod, HttpSession session){
     if (verifier.verifyToken(tokenInSession,dniUserInSession)){
       if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
         orderService.deleteOrder(cod);
-        return "redirect:orders/orderListAdmin";//
+        return "redirect:orderListAdmin";//
       }else {
         return "users/login";//
       }

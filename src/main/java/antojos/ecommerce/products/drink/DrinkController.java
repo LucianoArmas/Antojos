@@ -38,7 +38,7 @@ public class DrinkController {
         drink.setStock(stock);
         drink.setLts(lts);
         drinkService.updateDrink(drink);
-        return "redirect:products/prodsList";//
+        return "redirect:../products/prodsList";//
       }else {
         return "users/login";//
       }
@@ -68,7 +68,7 @@ public class DrinkController {
       if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
         drinkService.deleteDrink(id);
         deleteImgDrink(id);
-        return "redirect:products/prodsList";//
+        return "redirect:../products/prodsList";//
       }else {
         return "users/login";//
       }

@@ -117,6 +117,7 @@ public class UserController {
 
         boolean flagEditPassReset = resetFlagEditPass(session);
         session.setAttribute("flag_canEditPass", flagEditPassReset);
+        session.setAttribute("user",userBD);
 
         return "users/editProfile";//
       }else {
@@ -138,6 +139,10 @@ public class UserController {
       if (verifier.verifyRole(session) != null){
         userService.updateUser(newUser,dni, false);
         session.setAttribute("flag_canEditPass", false);
+
+        User userAux = userService.getUserByDni(dni);
+        session.setAttribute("user", userAux);
+
         return "users/editProfile";//
       }else {
         return "users/login";//
@@ -168,7 +173,7 @@ public class UserController {
           model.addAttribute("error", "Incorrect userPass");
         }
 
-        model.addAttribute("user", userSession);
+        model.addAttribute("user", userByDni);
         return "users/editProfile";//
       }else {
         return "users/login";//
@@ -180,7 +185,7 @@ public class UserController {
 
 
   @PostMapping("/editUser")
-  public String editUser(@RequestParam String dni, @RequestParam String name, @RequestParam String lastname, @RequestParam String email, @RequestParam Role role, HttpSession session){
+  public String editUser(@RequestParam String dni, @RequestParam String name, @RequestParam String lastname, @RequestParam String email, @RequestParam String accessLvl, HttpSession session){
 
     String tokenInSession = (String) session.getAttribute("token");
     String dniUserInSession = ((User) session.getAttribute("user")).getDni();
@@ -191,10 +196,15 @@ public class UserController {
         userEdit.setName(name);
         userEdit.setLastName(lastname);
         userEdit.setDni(dni);
-        userEdit.setRole(role);
         userEdit.setEmail(email);
+        if (Objects.equals(accessLvl, "admin")){
+          userEdit.setRole(Role.ADMIN);
+        } else if (Objects.equals(accessLvl, "client")) {
+          userEdit.setRole(Role.USER);
+        }
+        userEdit.setAccessLvl(accessLvl);
         userService.updateUser(userEdit, dni, true);
-        return "redirect:users/list";//
+        return "redirect:list";//
       }else {
         return "users/login";//
       }
@@ -212,7 +222,7 @@ public class UserController {
     if (verifier.verifyToken(tokenInSession,dniUserInSession)){
       if (Objects.equals(verifier.verifyRole(session), Role.ADMIN)){
         userService.deleteUser(dni);
-        return "redirect:users/list";//
+        return "redirect:list";//
       }else {
         return "users/login";//
       }

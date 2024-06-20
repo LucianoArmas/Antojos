@@ -18,7 +18,7 @@
                 <div style="display: flex; justify-content: flex-end; align-items: center;" id="btns">
 
                     <div th:if="${session.user}">
-                        <form th:action="@{/orders/addToCart}" method="post">
+                        <form th:action="@{/order/addToCart}" method="post">
                             <input type="hidden" name="id" th:value="${productSelected.id}">
                             <button class="CartBtn btn" type="submit">
                             <span class="IconContainer">
