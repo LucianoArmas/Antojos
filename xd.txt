@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app_antojos:
+    image: antojos-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:mysql:URL
+      DB_USER_NAME: NAMEDB
+      DB_PASSWORD: PASSWDB
+    
+  db:
+    image: mysql:8.1.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: PASSW
+      MYSQL_DATABASE: DB
+      MYSQL_USER: USER
+      MYSQL_PASSWORD: PASSWUSER
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s

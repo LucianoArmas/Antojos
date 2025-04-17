@@ -1,0 +1,5 @@
+# Created at 2025-04-17T20:18:37.155
+Boot Manifest-JAR contains absolute paths in classpath 'E:\PROGRAMACION\AntojosWeb\Antojos\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+

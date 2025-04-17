@@ -1,7 +1,7 @@
 # Use an official OpenJDK runtime as a parent image
 FROM openjdk:21-jdk-slim
 
-ENV IMG_PATH = /imgs
+ENV IMG_PATH =/imgs
 
 # Set the working directory inside the container
 WORKDIR /app
