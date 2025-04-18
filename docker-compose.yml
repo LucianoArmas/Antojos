@@ -14,7 +14,8 @@ services:
         condition: service_healthy
     environment:
       # DB_URL: jdbc:mysql://db:3306/b98t1weohq60v7wxm6wz
-      DB_URL: jdbc:mysql://uh4dxqseiss6qykp:c9gfwxCulN0dzPWVvZlW@bp1mi2fytyu7mg0bjjcb-mysql.services.clever-cloud.com:3306/bp1mi2fytyu7mg0bjjcb
+      # DB_URL: jdbc:mysql://uh4dxqseiss6qykp:c9gfwxCulN0dzPWVvZlW@bp1mi2fytyu7mg0bjjcb-mysql.services.clever-cloud.com:3306/bp1mi2fytyu7mg0bjjcb
+      DB_URL: jdbc:mysql://db:3306/bp1mi2fytyu7mg0bjjcb
       DB_USER_NAME: uh4dxqseiss6qykp
       DB_PASSWORD: c9gfwxCulN0dzPWVvZlW
     
